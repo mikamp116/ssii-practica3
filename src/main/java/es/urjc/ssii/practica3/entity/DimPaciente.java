@@ -1,9 +1,9 @@
 package es.urjc.ssii.practica3.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
- *
  * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
  */
 @Entity
@@ -11,8 +11,9 @@ import javax.persistence.*;
 public class DimPaciente {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "paciente_id")
+    private int pacienteId;
 
     private int edad;
 
@@ -41,13 +42,16 @@ public class DimPaciente {
 
     private boolean cancer;
 
+    @OneToMany(mappedBy = "pacienteId", cascade = CascadeType.ALL)
+    private Set<TablaHechos> hechos;
+
     public DimPaciente() {
     }
 
     public DimPaciente(int id, int edad, byte sexo, double imc, int formaFisica, boolean tabaquismo,
                        boolean alcoholismo, boolean colesterol, boolean hipertension, boolean cardiopatia,
                        boolean reuma, boolean epoc, int hepatitis, boolean cancer) {
-        this.id = id;
+        this.pacienteId = id;
         this.edad = edad;
         this.sexo = sexo;
         this.imc = imc;
@@ -63,12 +67,12 @@ public class DimPaciente {
         this.cancer = cancer;
     }
 
-    public int getId() {
-        return id;
+    public int getPacienteId() {
+        return pacienteId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPacienteId(int pacienteId) {
+        this.pacienteId = pacienteId;
     }
 
     public int getEdad() {
@@ -175,23 +179,43 @@ public class DimPaciente {
         this.cancer = cancer;
     }
 
+    public Set<TablaHechos> getHechos() {
+        return hechos;
+    }
+
+    public void setHechos(Set<TablaHechos> hechos) {
+        this.hechos = hechos;
+    }
+
     @Override
     public String toString() {
-        return "DimPaciente{" +
-                "id=" + id +
+        String toReturn = "DimPaciente{" +
+                "id=" + pacienteId +
                 ", edad=" + edad +
                 ", sexo=" + sexo +
                 ", imc=" + imc +
                 ", formaFisica=" + formaFisica +
-                ", tabaquismo=" + tabaquismo +
-                ", alcoholismo=" + alcoholismo +
-                ", colesterol=" + colesterol +
-                ", hipertension=" + hipertension +
-                ", cardiopatia=" + cardiopatia +
-                ", reuma=" + reuma +
-                ", epoc=" + epoc +
-                ", hepatitis=" + hepatitis +
-                ", cancer=" + cancer +
-                '}';
+                ", tiene: {";
+        if (tabaquismo)
+            toReturn += "tabaquismo, ";
+        if (alcoholismo)
+            toReturn += "alcoholismo, ";
+        if (colesterol)
+            toReturn += "colesterol, ";
+        if (hipertension)
+            toReturn += "hipertension, ";
+        if (cardiopatia)
+            toReturn += "cardiopatia, ";
+        if (reuma)
+            toReturn += "reuma, ";
+        if (epoc)
+            toReturn += "epoc, ";
+        if (hepatitis > 0)
+            toReturn += "hepatitis=" + hepatitis;
+        if (cancer)
+            toReturn += ", cancer";
+        toReturn += "}}";
+
+        return toReturn;
     }
 }

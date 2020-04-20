@@ -1,10 +1,8 @@
 package es.urjc.ssii.practica3.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
 
 /**
- *
  * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
  */
 @Entity
@@ -12,17 +10,24 @@ import java.sql.Date;
 public class TablaHechos {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "hecho_id")
+    private int hechoId;
 
-    @Column(name="cliente_id")
-    private int clienteId;
+    @ManyToOne
+    @JoinColumn(name = "pacienteId")
+    @Column(name = "paciente_id")
+    private DimPaciente pacienteId;
 
-    @Column(name="hospital_id")
-    private int hospitalId;
+    @ManyToOne
+    @JoinColumn(name = "hospitalId")
+    @Column(name = "hospital_id")
+    private DimHospital hospitalId;
 
-    @Column(name="fecha_ingreso_id")
-    private Date fechaIngresoId;
+    @ManyToOne
+    @JoinColumn(name = "tiempoId")
+    @Column(name = "fecha_ingreso_id")
+    private DimTiempo fechaIngresoId;
 
     private int duracion;
 
@@ -35,11 +40,10 @@ public class TablaHechos {
     public TablaHechos() {
     }
 
-    public TablaHechos(int id, int clienteId, int hospitalId, Date fechaIngresoId, int duracion, boolean uci,
-                       boolean fallecido, int tratamiento) {
-
-        this.id = id;
-        this.clienteId = clienteId;
+    public TablaHechos(int hechoId, DimPaciente pacienteId, DimHospital hospitalId, DimTiempo fechaIngresoId,
+                       int duracion, boolean uci, boolean fallecido, int tratamiento) {
+        this.hechoId = hechoId;
+        this.pacienteId = pacienteId;
         this.hospitalId = hospitalId;
         this.fechaIngresoId = fechaIngresoId;
         this.duracion = duracion;
@@ -48,35 +52,35 @@ public class TablaHechos {
         this.tratamiento = tratamiento;
     }
 
-    public int getId() {
-        return id;
+    public int getHechoId() {
+        return hechoId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setHechoId(int id) {
+        this.hechoId = id;
     }
 
-    public int getClienteId() {
-        return clienteId;
+    public DimPaciente getPacienteId() {
+        return pacienteId;
     }
 
-    public void setClienteId(int clienteId) {
-        this.clienteId = clienteId;
+    public void setPacienteId(DimPaciente pacienteId) {
+        this.pacienteId = pacienteId;
     }
 
-    public int getHospitalId() {
+    public DimHospital getHospitalId() {
         return hospitalId;
     }
 
-    public void setHospitalId(int hospitalId) {
+    public void setHospitalId(DimHospital hospitalId) {
         this.hospitalId = hospitalId;
     }
 
-    public Date getFechaIngresoId() {
+    public DimTiempo getFechaIngresoId() {
         return fechaIngresoId;
     }
 
-    public void setFechaIngresoId(Date fechaIngresoId) {
+    public void setFechaIngresoId(DimTiempo fechaIngresoId) {
         this.fechaIngresoId = fechaIngresoId;
     }
 
@@ -115,8 +119,8 @@ public class TablaHechos {
     @Override
     public String toString() {
         return "TablaHechos{" +
-                "id=" + id +
-                ", clienteId=" + clienteId +
+                "id=" + hechoId +
+                ", pacienteId=" + pacienteId +
                 ", hospitalId=" + hospitalId +
                 ", fechaIngresoId=" + fechaIngresoId +
                 ", duracion=" + duracion +
