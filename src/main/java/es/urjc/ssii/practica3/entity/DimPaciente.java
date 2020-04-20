@@ -189,7 +189,7 @@ public class DimPaciente {
 
     @Override
     public String toString() {
-        String toReturn = "Paciente{" +
+        String toReturn = "DimPaciente{" +
                 "id=" + pacienteId +
                 ", edad=" + edad +
                 ", sexo=" + sexo +
