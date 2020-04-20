@@ -2,9 +2,9 @@ package es.urjc.ssii.practica3.entity;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Set;
 
 /**
- *
  * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
  */
 @Entity
@@ -12,8 +12,9 @@ import java.sql.Date;
 public class DimTiempo {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "tiempo_id")
+    private int tiempoId;
 
     private Date fecha;
 
@@ -31,11 +32,14 @@ public class DimTiempo {
     @Column(name = "es_finde")
     private boolean esFinde;
 
+    @OneToMany(mappedBy = "fechaIngresoId", cascade = CascadeType.ALL)
+    private Set<TablaHechos> hechos;
+
     public DimTiempo() {
     }
 
     public DimTiempo(int id, Date fecha, int dia, int mes, int anio, int cuatri, DiaSemana diaSemana, boolean esFinde) {
-        this.id = id;
+        this.tiempoId = id;
         this.fecha = fecha;
         this.dia = dia;
         this.mes = mes;
@@ -45,12 +49,12 @@ public class DimTiempo {
         this.esFinde = esFinde;
     }
 
-    public int getId() {
-        return id;
+    public int getTiempoId() {
+        return tiempoId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setTiempoId(int tiempoId) {
+        this.tiempoId = tiempoId;
     }
 
     public Date getFecha() {
@@ -109,10 +113,18 @@ public class DimTiempo {
         this.esFinde = esFinde;
     }
 
+    public Set<TablaHechos> getHechos() {
+        return hechos;
+    }
+
+    public void setHechos(Set<TablaHechos> hechos) {
+        this.hechos = hechos;
+    }
+
     @Override
     public String toString() {
         return "DimTiempo{" +
-                "id=" + id +
+                "id=" + tiempoId +
                 ", fecha=" + fecha +
                 ", dia=" + dia +
                 ", mes=" + mes +

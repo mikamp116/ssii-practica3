@@ -1,9 +1,9 @@
 package es.urjc.ssii.practica3.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
- *
  * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
  */
 @Entity
@@ -11,8 +11,9 @@ import javax.persistence.*;
 public class DimHospital {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "hospital_id")
+    private int hospitalId;
 
     private String nombre;
 
@@ -22,23 +23,26 @@ public class DimHospital {
 
     private String gestor;
 
+    @OneToMany(mappedBy = "hospitalId", cascade = CascadeType.ALL)
+    private Set<TablaHechos> hechos;
+
     public DimHospital() {
     }
 
     public DimHospital(int id, String nombre, int cpostal, String autopista, String gestor) {
-        this.id = id;
+        this.hospitalId = id;
         this.nombre = nombre;
         this.cpostal = cpostal;
         this.autopista = autopista;
         this.gestor = gestor;
     }
 
-    public int getId() {
-        return id;
+    public int getHospitalId() {
+        return hospitalId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setHospitalId(int hospitalId) {
+        this.hospitalId = hospitalId;
     }
 
     public String getNombre() {
@@ -73,10 +77,18 @@ public class DimHospital {
         this.gestor = gestor;
     }
 
+    public Set<TablaHechos> getHechos() {
+        return hechos;
+    }
+
+    public void setHechos(Set<TablaHechos> hechos) {
+        this.hechos = hechos;
+    }
+
     @Override
     public String toString() {
-        return "DimHospital{" +
-                "id=" + id +
+        return "Hospital{" +
+                "id=" + hospitalId +
                 ", nombre='" + nombre + '\'' +
                 ", cpostal=" + cpostal +
                 ", autopista='" + autopista + '\'' +
