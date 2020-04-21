@@ -1,7 +1,8 @@
 package es.urjc.ssii.practica3.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 /**
@@ -16,7 +17,7 @@ public class DimTiempo {
     @Column(name = "tiempo_id")
     private int tiempoId;
 
-    private Date fecha;
+    private LocalDate fecha;
 
     private int dia;
 
@@ -38,7 +39,7 @@ public class DimTiempo {
     public DimTiempo() {
     }
 
-    public DimTiempo(int id, Date fecha, int dia, int mes, int anio, int cuatri, DiaSemana diaSemana, boolean esFinde) {
+    public DimTiempo(int id, LocalDate fecha, int dia, int mes, int anio, int cuatri, DiaSemana diaSemana, boolean esFinde) {
         this.tiempoId = id;
         this.fecha = fecha;
         this.dia = dia;
@@ -57,11 +58,11 @@ public class DimTiempo {
         this.tiempoId = tiempoId;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
