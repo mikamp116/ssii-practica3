@@ -10,23 +10,20 @@ import javax.persistence.*;
 public class TablaHechos {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "hecho_id")
     private int hechoId;
 
     @ManyToOne
     @JoinColumn(name = "pacienteId")
-    @Column(name = "paciente_id")
     private DimPaciente pacienteId;
 
     @ManyToOne
     @JoinColumn(name = "hospitalId")
-    @Column(name = "hospital_id")
     private DimHospital hospitalId;
 
     @ManyToOne
     @JoinColumn(name = "tiempoId")
-    @Column(name = "fecha_ingreso_id")
     private DimTiempo fechaIngresoId;
 
     private int duracion;

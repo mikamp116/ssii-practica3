@@ -11,7 +11,7 @@ import java.util.Set;
 public class DimHospital {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "hospital_id")
     private int hospitalId;
 
@@ -33,6 +33,14 @@ public class DimHospital {
         this.hospitalId = id;
         this.nombre = nombre;
         this.cpostal = cpostal;
+        this.autopista = autopista;
+        this.gestor = gestor;
+    }
+
+    public DimHospital(int id, String nombre, String cpostal, String autopista, String gestor) {
+        this.hospitalId = id;
+        this.nombre = nombre;
+        this.cpostal = Integer.parseInt(cpostal);
         this.autopista = autopista;
         this.gestor = gestor;
     }

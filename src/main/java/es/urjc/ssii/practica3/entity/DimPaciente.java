@@ -11,7 +11,7 @@ import java.util.Set;
 public class DimPaciente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "paciente_id")
     private int pacienteId;
 
@@ -19,7 +19,7 @@ public class DimPaciente {
 
     private byte sexo;
 
-    private double imc;
+    private int imc;
 
     @Column(name = "forma_fisica")
     private int formaFisica;
@@ -48,7 +48,7 @@ public class DimPaciente {
     public DimPaciente() {
     }
 
-    public DimPaciente(int id, int edad, byte sexo, double imc, int formaFisica, boolean tabaquismo,
+    public DimPaciente(int id, int edad, byte sexo, int imc, int formaFisica, boolean tabaquismo,
                        boolean alcoholismo, boolean colesterol, boolean hipertension, boolean cardiopatia,
                        boolean reuma, boolean epoc, int hepatitis, boolean cancer) {
         this.pacienteId = id;
@@ -91,11 +91,11 @@ public class DimPaciente {
         this.sexo = sexo;
     }
 
-    public double getImc() {
+    public int getImc() {
         return imc;
     }
 
-    public void setImc(double imc) {
+    public void setImc(int imc) {
         this.imc = imc;
     }
 

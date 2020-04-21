@@ -13,7 +13,7 @@ import java.util.Set;
 public class DimTiempo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "tiempo_id")
     private int tiempoId;
 
@@ -36,6 +36,8 @@ public class DimTiempo {
     @OneToMany(mappedBy = "fechaIngresoId", cascade = CascadeType.ALL)
     private Set<TablaHechos> hechos;
 
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     public DimTiempo() {
     }
 
@@ -48,6 +50,18 @@ public class DimTiempo {
         this.cuatrimestre = cuatri;
         this.diaSemana = diaSemana;
         this.esFinde = esFinde;
+    }
+
+    public DimTiempo(int id, String fecha, String dia, String mes, String anio, String cuatri, String diaSemana,
+                     String esFinde) {
+        this.tiempoId = id;
+        this.fecha = LocalDate.parse(fecha, formatter);
+        this.dia = Integer.parseInt(dia);
+        this.mes = Integer.parseInt(mes);
+        this.anio = Integer.parseInt(anio);
+        this.cuatrimestre = Integer.parseInt(cuatri);
+        this.diaSemana = DiaSemana.valueOf(diaSemana.toUpperCase());
+        this.esFinde = esFinde.equals("1");
     }
 
     public int getTiempoId() {
