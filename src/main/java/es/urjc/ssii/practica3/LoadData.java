@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ */
 @Component
 public class LoadData {
     @Autowired
@@ -63,7 +66,6 @@ public class LoadData {
         }
 
         // DimPaciente
-
         id = 1;
         String path = "data/P";
         String ext = ".csv";
@@ -89,7 +91,7 @@ public class LoadData {
             while ((line = br.readLine()) != null) {
                 String[] columnas = line.split(";");
                 DimPaciente paciente = new DimPaciente(id, Integer.parseInt(columnas[1]),
-                        (byte) (columnas[2].equals("M")?1:0), Integer.parseInt(columnas[3]),
+                        (byte) (columnas[2].equals("M") ? 1 : 0), Integer.parseInt(columnas[3]),
                         Integer.parseInt(columnas[4]), !columnas[5].equals("No"), !columnas[6].equals("No"),
                         !columnas[7].equals("No"), !columnas[8].equals("No"), !columnas[9].equals("No"),
                         !columnas[10].equals("No"), !columnas[11].equals("No"), Integer.parseInt(columnas[13]),
@@ -105,7 +107,7 @@ public class LoadData {
             while ((line = br.readLine()) != null) {
                 String[] columnas = line.split(";");
                 DimPaciente paciente = new DimPaciente(id, Integer.parseInt(columnas[1]),
-                        (byte) (columnas[2].equals("M")?1:0), Integer.parseInt(columnas[3]),
+                        (byte) (columnas[2].equals("M") ? 1 : 0), Integer.parseInt(columnas[3]),
                         Integer.parseInt(columnas[4]), !columnas[5].equals("No"), !columnas[6].equals("No"),
                         !columnas[7].equals("No"), !columnas[8].equals("No"), !columnas[9].equals("No"),
                         !columnas[10].equals("No"), !columnas[11].equals("No"), Integer.parseInt(columnas[12]),
@@ -179,22 +181,28 @@ public class LoadData {
         }
 
         // Mostrar datos
-
+        StringBuilder sb = new StringBuilder("***** HOSPITALES *****\n______________________\n");
         List<DimHospital> hospitales = hospitalService.getAll();
         for (DimHospital h : hospitales)
-            System.out.println(h);
+            sb.append(h).append("\n");
+        System.out.println(sb);
 
+        sb = new StringBuilder("***** TIEMPOS *****\n___________________\n");
         List<DimTiempo> tiempos = tiempoService.getAll();
         for (DimTiempo t : tiempos)
-            System.out.println(t);
+            sb.append(t).append("\n");
+        System.out.println(sb);
 
-
+        sb = new StringBuilder("***** PACIENTES *****\n_____________________\n");
         List<DimPaciente> pacientes = pacienteService.getAll();
-        for (DimPaciente p :pacientes)
-            System.out.println(p);
+        for (DimPaciente p : pacientes)
+            sb.append(p).append("\n");
+        System.out.println(sb);
 
+        sb = new StringBuilder("***** HECHOS *****\n__________________\n");
         List<TablaHechos> hechos = hechosService.getAll();
         for (TablaHechos h : hechos)
-            System.out.println(h);
+            sb.append(h).append("\n");
+        System.out.println(sb);
     }
 }

@@ -13,7 +13,6 @@ import java.util.Set;
 public class DimTiempo {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "tiempo_id")
     private int tiempoId;
 
@@ -140,7 +139,7 @@ public class DimTiempo {
     public String toString() {
         return "DimTiempo{" +
                 "id=" + tiempoId +
-                ", fecha=" + fecha +
+                ", fecha=" + fecha.format(formatter) +
                 ", dia=" + dia +
                 ", mes=" + mes +
                 ", anio=" + anio +

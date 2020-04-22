@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ */
 @Repository
 public interface TablaHechosRepository extends CrudRepository<TablaHechos, Integer> {
 

@@ -7,22 +7,24 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+/**
+ * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ */
 @Service
 public class DimHospitalService {
 
-	@Autowired
-	private DimHospitalRepository repositorio;
+    @Autowired
+    private DimHospitalRepository repositorio;
 
-	public void save(DimHospital hospital) {
-		repositorio.save(hospital);
-	}
+    public void save(DimHospital hospital) {
+        repositorio.save(hospital);
+    }
 
-	public DimHospital getById(int id) {
-		return repositorio.findByHospitalId(id);
-	}
+    public DimHospital getById(int id) {
+        return repositorio.findByHospitalId(id);
+    }
 
-	public List<DimHospital> getAll() {
-		return repositorio.findAll();
-	}
+    public List<DimHospital> getAll() {
+        return repositorio.findAll();
+    }
 }

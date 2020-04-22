@@ -11,7 +11,6 @@ import java.util.Set;
 public class DimPaciente {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "paciente_id")
     private int pacienteId;
 
@@ -211,9 +210,9 @@ public class DimPaciente {
         if (epoc)
             toReturn += "epoc, ";
         if (hepatitis > 0)
-            toReturn += "hepatitis=" + hepatitis;
+            toReturn += "hepatitis=" + hepatitis + ", ";
         if (cancer)
-            toReturn += ", cancer";
+            toReturn += "cancer";
         toReturn += "}}";
 
         return toReturn;

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ */
 @Repository
 public interface DimTiempoRepository extends CrudRepository<DimTiempo, Integer> {
 

@@ -11,7 +11,6 @@ import java.util.Set;
 public class DimHospital {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "hospital_id")
     private int hospitalId;
 

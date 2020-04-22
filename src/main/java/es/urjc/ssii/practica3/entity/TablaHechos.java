@@ -10,7 +10,6 @@ import javax.persistence.*;
 public class TablaHechos {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "hecho_id")
     private int hechoId;
 

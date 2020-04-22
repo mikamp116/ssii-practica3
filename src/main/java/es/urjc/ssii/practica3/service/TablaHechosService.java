@@ -7,18 +7,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+/**
+ * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ */
 @Service
 public class TablaHechosService {
 
-	@Autowired
-	private TablaHechosRepository repositorio;
+    @Autowired
+    private TablaHechosRepository repositorio;
 
-	public void save(TablaHechos hechos) {
-		repositorio.save(hechos);
-	}
+    public void save(TablaHechos hechos) {
+        repositorio.save(hechos);
+    }
 
-	public List<TablaHechos> getAll() {
-		return repositorio.findAll();
-	}
+    public List<TablaHechos> getAll() {
+        return repositorio.findAll();
+    }
 }
