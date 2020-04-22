@@ -8,13 +8,21 @@ import es.urjc.ssii.practica3.service.DimHospitalService;
 import es.urjc.ssii.practica3.service.DimPacienteService;
 import es.urjc.ssii.practica3.service.DimTiempoService;
 import es.urjc.ssii.practica3.service.TablaHechosService;
+import org.apache.mahout.cf.taste.common.TasteException;
+import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
+import org.apache.mahout.cf.taste.impl.neighborhood.ThresholdUserNeighborhood;
+import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
+import org.apache.mahout.cf.taste.model.DataModel;
+import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
+import org.apache.mahout.cf.taste.recommender.RecommendedItem;
+import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
+import org.apache.mahout.cf.taste.similarity.UserSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -22,7 +30,7 @@ import java.util.List;
  * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
  */
 @Component
-public class LoadData {
+public class StartController {
     @Autowired
     private DimHospitalService hospitalService;
     @Autowired
@@ -33,7 +41,39 @@ public class LoadData {
     private TablaHechosService hechosService;
 
     @PostConstruct
-    public void load() {
+    public void start() throws IOException, TasteException {
+        loadData();
+        showData();
+        filtradoColaborativo(); // Victor este es el metodo que no debes mirar
+    }
+
+    private void showData() {
+        StringBuilder sb = new StringBuilder("***** HOSPITALES *****\n______________________\n");
+        List<DimHospital> hospitales = hospitalService.getAll();
+        for (DimHospital h : hospitales)
+            sb.append(h).append("\n");
+        System.out.println(sb);
+
+        sb = new StringBuilder("***** TIEMPOS *****\n___________________\n");
+        List<DimTiempo> tiempos = tiempoService.getAll();
+        for (DimTiempo t : tiempos)
+            sb.append(t).append("\n");
+        System.out.println(sb);
+
+        sb = new StringBuilder("***** PACIENTES *****\n_____________________\n");
+        List<DimPaciente> pacientes = pacienteService.getAll();
+        for (DimPaciente p : pacientes)
+            sb.append(p).append("\n");
+        System.out.println(sb);
+
+        sb = new StringBuilder("***** HECHOS *****\n__________________\n");
+        List<TablaHechos> hechos = hechosService.getAll();
+        for (TablaHechos h : hechos)
+            sb.append(h).append("\n");
+        System.out.println(sb);
+    }
+
+    private void loadData() {
         String line;
 
         // DimLugar
@@ -179,30 +219,50 @@ public class LoadData {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-        // Mostrar datos
-        StringBuilder sb = new StringBuilder("***** HOSPITALES *****\n______________________\n");
-        List<DimHospital> hospitales = hospitalService.getAll();
-        for (DimHospital h : hospitales)
-            sb.append(h).append("\n");
-        System.out.println(sb);
+    /* No mires!!! */
+    private void filtradoColaborativo() throws IOException, TasteException {
+        String line;
+        String path = "data/datos_filtrado_colaborativo_";
+        String ext = ".csv";
+        String sep = ",";
+        int cont = 0;
+        int [] numeroPacientes = new int [] {0 ,0, 0, 0};
+        BufferedWriter writer = new BufferedWriter(new FileWriter("data/datos_filtrado_colaborativo_todos.csv", false));
+        /* QUE NO MIREEES */
+        for (int i = 1; i < 5; i++) {
+            if (i > 1)
+                cont += numeroPacientes[i-2];
+            try (BufferedReader br = new BufferedReader(new FileReader(path + i + ext))) {
+                br.readLine();
+                while ((line = br.readLine()) != null) {
+                    String [] columnas = line.split(",");
+                    numeroPacientes[i-1] = numeroPacientes[i-1]+1;
+                    for (int j = 0; j < columnas.length; j++)
+                        if (j!=0 && !columnas[j].equals("0"))
+                            writer.append(String.valueOf(Integer.parseInt(columnas[0])+cont)).append(sep)
+                                    .append(String.valueOf(j)).append(sep).append(columnas[j]).append("\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        writer.close();
 
-        sb = new StringBuilder("***** TIEMPOS *****\n___________________\n");
-        List<DimTiempo> tiempos = tiempoService.getAll();
-        for (DimTiempo t : tiempos)
-            sb.append(t).append("\n");
-        System.out.println(sb);
-
-        sb = new StringBuilder("***** PACIENTES *****\n_____________________\n");
-        List<DimPaciente> pacientes = pacienteService.getAll();
-        for (DimPaciente p : pacientes)
-            sb.append(p).append("\n");
-        System.out.println(sb);
-
-        sb = new StringBuilder("***** HECHOS *****\n__________________\n");
-        List<TablaHechos> hechos = hechosService.getAll();
-        for (TablaHechos h : hechos)
-            sb.append(h).append("\n");
-        System.out.println(sb);
+        long [][] recomendations = new long [cont][3];
+        DataModel model = new FileDataModel(new File("data/datos_filtrado_colaborativo_todos.csv"));
+        UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
+        UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1, similarity, model);
+        UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
+        for (long i = 1L; i <= cont; i++) {
+            List<RecommendedItem> userRecommendations = recommender.recommend(i, 3);
+            recomendations[(int)i-1][0] = userRecommendations.size()>0 ? userRecommendations.get(0).getItemID() : 0;
+            recomendations[(int)i-1][1] = userRecommendations.size()>1 ? userRecommendations.get(1).getItemID() : 0;
+            recomendations[(int)i-1][2] = userRecommendations.size()>2 ? userRecommendations.get(2).getItemID() : 0;
+        }
+        File f = new File("data/datos_filtrado_colaborativo_todos.csv");
+        if(f.exists())
+            f.delete();
     }
 }
