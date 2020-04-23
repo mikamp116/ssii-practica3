@@ -1,13 +1,12 @@
 package es.urjc.ssii.practica3;
 
-import es.urjc.ssii.practica3.entity.DimHospital;
-import es.urjc.ssii.practica3.entity.DimPaciente;
-import es.urjc.ssii.practica3.entity.DimTiempo;
-import es.urjc.ssii.practica3.entity.TablaHechos;
-import es.urjc.ssii.practica3.service.DimHospitalService;
-import es.urjc.ssii.practica3.service.DimPacienteService;
-import es.urjc.ssii.practica3.service.DimTiempoService;
-import es.urjc.ssii.practica3.service.TablaHechosService;
+import es.urjc.ssii.practica3.entity.*;
+import es.urjc.ssii.practica3.entity.opcionA.CompuestoRecomendadoH1;
+import es.urjc.ssii.practica3.entity.opcionA.CompuestoRecomendadoH2;
+import es.urjc.ssii.practica3.entity.opcionA.CompuestoRecomendadoH3;
+import es.urjc.ssii.practica3.entity.opcionA.CompuestoRecomendadoH4;
+import es.urjc.ssii.practica3.entity.opcionB.CompuestoRecomendado;
+import es.urjc.ssii.practica3.service.*;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
 import org.apache.mahout.cf.taste.impl.neighborhood.ThresholdUserNeighborhood;
@@ -17,7 +16,7 @@ import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
-import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.CityBlockSimilarity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +38,8 @@ public class StartController {
     private DimTiempoService tiempoService;
     @Autowired
     private TablaHechosService hechosService;
+    @Autowired
+    private CompuestoRecomendadoService compuestoRecomendadoService;
 
     @PostConstruct
     public void start() throws IOException, TasteException {
@@ -249,17 +250,75 @@ public class StartController {
             }
         }
         writer.close();
+        cont += numeroPacientes[3];
 
-        long [][] recomendations = new long [cont][3];
+
+        int[] items = new int[3];
+        float[] values = new float[3];
         DataModel model = new FileDataModel(new File("data/datos_filtrado_colaborativo_todos.csv"));
-        UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
+        UserSimilarity similarity = new CityBlockSimilarity(model);
         UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1, similarity, model);
         UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
         for (long i = 1L; i <= cont; i++) {
             List<RecommendedItem> userRecommendations = recommender.recommend(i, 3);
-            recomendations[(int)i-1][0] = userRecommendations.size()>0 ? userRecommendations.get(0).getItemID() : 0;
-            recomendations[(int)i-1][1] = userRecommendations.size()>1 ? userRecommendations.get(1).getItemID() : 0;
-            recomendations[(int)i-1][2] = userRecommendations.size()>2 ? userRecommendations.get(2).getItemID() : 0;
+            for (int j = 0; j < 3; j++) {
+                if (userRecommendations.size()>j) {
+                    items[j] = (int)userRecommendations.get(j).getItemID();
+                    values[j] = userRecommendations.get(j).getValue();
+                } else {
+                    items[j] = 0;
+                    values[j] = 0;
+                }
+            }
+
+            /* Apartado 4.4 - Opcion A: Inicio */
+            if (i <= numeroPacientes[0]) {
+                CompuestoRecomendadoH1 cr = new CompuestoRecomendadoH1((int)i, items[0], values[0], items[1], values[1],
+                        items[2], values[2]);
+                compuestoRecomendadoService.saveHospital1(cr);
+            } else {
+                if (i <= (numeroPacientes[1] + numeroPacientes[0])) {
+                    CompuestoRecomendadoH2 cr = new CompuestoRecomendadoH2((int)i - numeroPacientes[0], items[0],
+                            values[0], items[1], values[1], items[2], values[2]);
+                    compuestoRecomendadoService.saveHospital2(cr);
+                } else {
+                    if (i <= (numeroPacientes[0] + numeroPacientes[1] + numeroPacientes[2])) {
+                        CompuestoRecomendadoH3 cr = new CompuestoRecomendadoH3(
+                                (int)i - numeroPacientes[0] - numeroPacientes[1], items[0], values[0], items[1],
+                                values[1], items[2], values[2]);
+                        compuestoRecomendadoService.saveHospital3(cr);
+                    } else {
+                        CompuestoRecomendadoH4 cr = new CompuestoRecomendadoH4(
+                                (int)i - numeroPacientes[0] - numeroPacientes[1] - numeroPacientes[2], items[0],
+                                values[0], items[1], values[1], items[2], values[2]);
+                        compuestoRecomendadoService.saveHospital4(cr);
+                    }
+                }
+            }
+            /* Apartado 4.4 - Opcion A: Fin */
+
+            /* Apartado 4.4 - Opcion B: Inicio */
+            int hospitalId;
+
+            if (i <= numeroPacientes[0]) {
+                hospitalId = 1;
+            } else {
+                if (i <= (numeroPacientes[1] + numeroPacientes[0])) {
+                    hospitalId = 2;
+                } else {
+                    if (i <= (numeroPacientes[0] + numeroPacientes[1] + numeroPacientes[2])) {
+                        hospitalId = 3;
+                    } else {
+                        hospitalId = 4;
+                    }
+                }
+            }
+
+            CompuestoRecomendado cr = new CompuestoRecomendado((int)i, hospitalId, items[0], values[0], items[1],
+                    values[1], items[2], values[2]);
+            compuestoRecomendadoService.save(cr);
+            /* Apartado 4.4 - Opcion B: Fin */
+
         }
         File f = new File("data/datos_filtrado_colaborativo_todos.csv");
         if(f.exists())
