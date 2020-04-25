@@ -28,8 +28,8 @@ import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 import weka.core.converters.ConverterUtils;
 import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.Discretize;
 import weka.filters.unsupervised.attribute.NumericCleaner;
+import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.NumericTransform;
 import weka.filters.unsupervised.attribute.Remove;
 
@@ -61,142 +61,6 @@ public class StartController {
         filtradoColaborativo(); // Victor este es el metodo que no debes mirar
         reglasAsociacion();
     }
-
-    public static Instances merge(Instances data1, Instances[] datas) throws Exception {
-        Instances dest = new Instances(data1);
-        dest.setRelationName(data1.relationName() + "+" + datas[0].relationName() + "+" + datas[1].relationName() + "+" +
-                datas[2].relationName());
-
-        for (Instances data : datas) {
-            ConverterUtils.DataSource source = new ConverterUtils.DataSource(data);
-            Instances instances = source.getStructure();
-            Instance instance = null;
-            while (source.hasMoreElements(instances)) {
-                instance = source.nextElement(instances);
-                dest.add(instance);
-            }
-        }
-
-        return dest;
-    }
-
-    public static Instances merge(Instances[] datas) throws Exception {
-        Instances dest = new Instances(datas[0]);
-        StringBuilder rel = new StringBuilder();
-        for (int i = 0; i < datas.length; i++) {
-            rel.append(datas[i].relationName());
-            if (i != datas.length-1)
-                rel.append("+");
-        }
-        System.out.println(rel);
-        dest.setRelationName(String.valueOf(rel));
-
-        for (int i = 1; i < datas.length; i++) {
-            ConverterUtils.DataSource source = new ConverterUtils.DataSource(datas[i]);
-            Instances instances = source.getStructure();
-            Instance instance;
-            while (source.hasMoreElements(instances)) {
-                instance = source.nextElement(instances);
-                dest.add(instance);
-            }
-        }
-
-        return dest;
-    }
-
-    private void reglasAsociacion() throws Exception {
-
-        CSVLoader loader = new CSVLoader();
-        loader.setFieldSeparator(",");
-        loader.setNoHeaderRowPresent(false);
-
-        String path = "data/datos_filtrado_colaborativo_";
-        String ext = ".csv";
-        Instances [] data_sources = new Instances[4];
-        for (int i = 1; i < 5; i++) {
-            File source = new File(path + i + ext);
-            loader.setSource(source);
-            data_sources[i-1] = loader.getDataSet();
-        }
-
-        /*File source1 = new File("data/datos_filtrado_colaborativo_1.csv");
-        loader.setSource(source1);
-        Instances data1 = loader.getDataSet();
-
-        File source2 = new File("data/datos_filtrado_colaborativo_2.csv");
-        loader.setSource(source2);
-        Instances data2 = loader.getDataSet();
-
-        File source3 = new File("data/datos_filtrado_colaborativo_3.csv");
-        loader.setSource(source3);
-        Instances data3 = loader.getDataSet();
-
-        File source4 = new File("data/datos_filtrado_colaborativo_4.csv");
-        loader.setSource(source4);
-        Instances data4 = loader.getDataSet();
-
-        Instances data = merge(data1, new Instances[]{data2, data3, data4});*/
-        Instances data = merge(data_sources);
-
-        // Borra columna de ids
-        Remove r = new Remove();
-        r.setAttributeIndices("1");
-        r.setInputFormat(data);
-        data = Filter.useFilter(data, r);
-
-        // Tranformacion de valores
-        NumericTransform nt = new NumericTransform();
-        nt.setAttributeIndices("first-last");
-        nt.setClassName("es.urjc.ssii.practica3.StartController");
-        nt.setMethodName("transf");
-        nt.setInputFormat(data);
-        data = Filter.useFilter(data, nt);
-
-        /*//- String to Nominal
-        StringToNominal filter1 = new StringToNominal();
-        filter1.setAttributeRange("first-last");
-        filter1.setInputFormat(data);
-        data = Filter.useFilter(data, filter1);*/
-
-        /*NumericToNominal filter5 = new NumericToNominal();
-        filter5.setAttributeIndices("first-last");
-        filter5.setInputFormat(data);
-        Instances dataB = Filter.useFilter(data, filter5);*/
-
-        // Inserta los missing values
-        NumericCleaner nc = new NumericCleaner();
-        nc.setMinThreshold(0.9);
-        nc.setMinDefault(Double.NaN);
-        nc.setAttributeIndices("first-last");
-        nc.setInputFormat(data);
-        data = Filter.useFilter(data, nc);
-
-        // Discretiza en 2 cubos
-        Discretize disc = new Discretize();
-        disc.setBins(2);
-        disc.setInputFormat(data);
-        data = Filter.useFilter(data, disc);
-
-        //- Mostrar en pantalla los atributos de los datos
-//        System.out.println(loader.getStructure() + " ...\n\n");
-
-        Apriori model = new Apriori();
-
-        model.buildAssociations(data);
-        System.out.println(model);
-    }
-
-    public static double transf(double a) {
-        if (a > 3)
-            return 1;
-        return 0;
-    }/*
-
-    public static String transf(String a) {
-        if (Integer.parseInt(a) > 3)
-            return "t";
-        return "?";
-    }*/
 
     private void showData() {
         StringBuilder sb = new StringBuilder("***** HOSPITALES *****\n______________________\n");
@@ -473,5 +337,113 @@ public class StartController {
         File f = new File("data/datos_filtrado_colaborativo_todos.csv");
         if (f.exists())
             f.delete();
+    }
+
+    private void reglasAsociacion() throws Exception {
+
+        CSVLoader loader = new CSVLoader();
+        loader.setFieldSeparator(",");
+        loader.setNoHeaderRowPresent(false);
+
+        String path = "data/datos_filtrado_colaborativo_";
+        String ext = ".csv";
+        Instances[] data_sources = new Instances[4];
+        for (int i = 1; i < 5; i++) {
+            File source = new File(path + i + ext);
+            loader.setSource(source);
+            data_sources[i - 1] = loader.getDataSet();
+        }
+        Instances data = merge(data_sources);
+
+        // Borra columna de ids
+        Remove r = new Remove();
+        r.setAttributeIndices("1");
+        r.setInputFormat(data);
+        data = Filter.useFilter(data, r);
+
+        reglasExito(new Instances(data));
+        reglasFallo(data);
+    }
+
+    public static Instances merge(Instances[] datas) throws Exception {
+        Instances dest = new Instances(datas[0]);
+        StringBuilder rel = new StringBuilder();
+        for (int i = 0; i < datas.length; i++) {
+            rel.append(datas[i].relationName());
+            if (i != datas.length - 1)
+                rel.append("+");
+        }
+        System.out.println(rel);
+        dest.setRelationName(String.valueOf(rel));
+
+        for (int i = 1; i < datas.length; i++) {
+            ConverterUtils.DataSource source = new ConverterUtils.DataSource(datas[i]);
+            Instances instances = source.getStructure();
+            Instance instance;
+            while (source.hasMoreElements(instances)) {
+                instance = source.nextElement(instances);
+                dest.add(instance);
+            }
+        }
+
+        return dest;
+    }
+
+    private void reglasExito(Instances data) throws Exception {
+        // Inserta los missing values
+        NumericCleaner nc = new NumericCleaner();
+        nc.setMinThreshold(3.5);
+        nc.setMinDefault(Double.NaN);
+        nc.setMaxThreshold(3.5);
+        nc.setMaxDefault(1);
+        nc.setInputFormat(data);
+        data = Filter.useFilter(data, nc);
+
+        NumericToNominal nn = new NumericToNominal();
+        nn.setInputFormat(data);
+        data = Filter.useFilter(data, nn);
+
+        Apriori model = new Apriori();
+
+        model.buildAssociations(data);
+        try (PrintWriter pw = new PrintWriter(new File("data/reglasExito.txt"))) {
+            pw.println(model);
+        }
+        System.out.println(model);
+    }
+
+    private void reglasFallo(Instances data) throws Exception {
+        // Tranformacion de ceros en un numero mayor a 3
+        NumericTransform nt = new NumericTransform();
+        nt.setAttributeIndices("first-last");
+        nt.setClassName("es.urjc.ssii.practica3.StartController");
+        nt.setMethodName("zeroTransformation");
+        nt.setInputFormat(data);
+        data = Filter.useFilter(data, nt);
+
+        // Inserta los missing values
+        NumericCleaner nc = new NumericCleaner();
+        nc.setMinThreshold(3.5);
+        nc.setMinDefault(1);
+        nc.setMaxThreshold(3.5);
+        nc.setMaxDefault(Double.NaN);
+        nc.setInputFormat(data);
+        data = Filter.useFilter(data, nc);
+
+        NumericToNominal nn = new NumericToNominal();
+        nn.setInputFormat(data);
+        data = Filter.useFilter(data, nn);
+
+        Apriori model = new Apriori();
+
+        model.buildAssociations(data);
+        try (PrintWriter pw = new PrintWriter(new File("data/reglasFallo.txt"))) {
+            pw.println(model);
+        }
+        System.out.println(model);
+    }
+
+    public static double zeroTransformation(double a) {
+        return (a == 0) ? 6 : a;
     }
 }
