@@ -5,6 +5,22 @@ google.charts.load('current', {'packages':['corechart', 'controls', 'bar']});
 google.charts.setOnLoadCallback(drawDiariosDashboard);
 google.charts.setOnLoadCallback(drawSemanalesDashboard);
 
+async function getHechos() {
+
+    let request = new Request("http://localhost:8080/hechos", {
+        method: 'GET',
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        })
+    });
+
+    try {
+        const fullresponse = await fetch(request);
+        const response = await fullresponse.json();
+    } catch(err) {
+    }
+}
+
 // Callback that creates and populates a data table,
 // instantiates the pie chart, passes in the data and
 // draws it.

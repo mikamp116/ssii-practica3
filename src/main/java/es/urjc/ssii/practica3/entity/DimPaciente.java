@@ -1,5 +1,7 @@
 package es.urjc.ssii.practica3.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -41,6 +43,7 @@ public class DimPaciente {
 
     private boolean cancer;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "pacienteId", cascade = CascadeType.ALL)
     private Set<TablaHechos> hechos;
 

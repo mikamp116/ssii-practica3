@@ -1,5 +1,7 @@
 package es.urjc.ssii.practica3.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -32,6 +34,7 @@ public class DimTiempo {
     @Column(name = "es_finde")
     private boolean esFinde;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "fechaIngresoId", cascade = CascadeType.ALL)
     private Set<TablaHechos> hechos;
 

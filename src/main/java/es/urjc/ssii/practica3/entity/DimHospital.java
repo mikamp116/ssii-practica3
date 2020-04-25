@@ -1,5 +1,7 @@
 package es.urjc.ssii.practica3.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -22,6 +24,7 @@ public class DimHospital {
 
     private String gestor;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "hospitalId", cascade = CascadeType.ALL)
     private Set<TablaHechos> hechos;
 
