@@ -183,7 +183,7 @@ public class StartController {
             br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] columnas = line.split(";");
-                TablaHechos hechos = new TablaHechos(id, pacienteService.getById(id), hospitalService.getById(id),
+                TablaHechos hechos = new TablaHechos(id, pacienteService.getById(id), hospitalService.getById(1),
                         tiempoService.getByFecha(columnas[2], formatterYYYY), Integer.parseInt(columnas[3]),
                         !columnas[4].equals("No"), !columnas[5].equals("No"), Integer.parseInt(columnas[6]));
                 hechosService.save(hechos);
@@ -197,7 +197,7 @@ public class StartController {
             br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] columnas = line.split(";");
-                TablaHechos hechos = new TablaHechos(id, pacienteService.getById(id), hospitalService.getById(id),
+                TablaHechos hechos = new TablaHechos(id, pacienteService.getById(id), hospitalService.getById(2),
                         tiempoService.getByFecha(columnas[2]), Integer.parseInt(columnas[3]),
                         !columnas[4].equals("No"), !columnas[5].equals("No"), Integer.parseInt(columnas[6]));
                 hechosService.save(hechos);
@@ -211,7 +211,7 @@ public class StartController {
             br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] columnas = line.split(";");
-                TablaHechos hechos = new TablaHechos(id, pacienteService.getById(id), hospitalService.getById(id),
+                TablaHechos hechos = new TablaHechos(id, pacienteService.getById(id), hospitalService.getById(3),
                         tiempoService.getByFecha(columnas[2], formatterYYYY), Integer.parseInt(columnas[3]),
                         !columnas[4].equals("No"), !columnas[5].equals("No"), Integer.parseInt(columnas[6]));
                 hechosService.save(hechos);
@@ -225,7 +225,7 @@ public class StartController {
             br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] columnas = line.split(";");
-                TablaHechos hechos = new TablaHechos(id, pacienteService.getById(id), hospitalService.getById(id),
+                TablaHechos hechos = new TablaHechos(id, pacienteService.getById(id), hospitalService.getById(4),
                         tiempoService.getByFecha(columnas[2], formatterYY), Integer.parseInt(columnas[3]),
                         !columnas[4].equals("No"), !columnas[5].equals("No"), Integer.parseInt(columnas[6]));
                 hechosService.save(hechos);
