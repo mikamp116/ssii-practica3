@@ -3,6 +3,8 @@ package es.urjc.ssii.practica3.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
@@ -18,7 +20,7 @@ public class DimTiempo {
     @Column(name = "tiempo_id")
     private int tiempoId;
 
-    private LocalDate fecha;
+    private Date fecha;
 
     private int dia;
 
@@ -43,7 +45,7 @@ public class DimTiempo {
     public DimTiempo() {
     }
 
-    public DimTiempo(int id, LocalDate fecha, int dia, int mes, int anio, int cuatri, DiaSemana diaSemana, boolean esFinde) {
+    public DimTiempo(int id, Date fecha, int dia, int mes, int anio, int cuatri, DiaSemana diaSemana, boolean esFinde) {
         this.tiempoId = id;
         this.fecha = fecha;
         this.dia = dia;
@@ -57,7 +59,7 @@ public class DimTiempo {
     public DimTiempo(int id, String fecha, String dia, String mes, String anio, String cuatri, String diaSemana,
                      String esFinde) {
         this.tiempoId = id;
-        this.fecha = LocalDate.parse(fecha, formatter);
+        this.fecha = new Date(Date.valueOf(LocalDate.parse(fecha, formatter)).getTime() + 8000000);
         this.dia = Integer.parseInt(dia);
         this.mes = Integer.parseInt(mes);
         this.anio = Integer.parseInt(anio);
@@ -74,11 +76,11 @@ public class DimTiempo {
         this.tiempoId = tiempoId;
     }
 
-    public LocalDate getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
@@ -140,9 +142,11 @@ public class DimTiempo {
 
     @Override
     public String toString() {
+        SimpleDateFormat sdf = new SimpleDateFormat(
+                "dd-MM-yyyy");
         return "DimTiempo{" +
                 "id=" + tiempoId +
-                ", fecha=" + fecha.format(formatter) +
+                ", fecha=" + sdf.format(fecha) +
                 ", dia=" + dia +
                 ", mes=" + mes +
                 ", anio=" + anio +

@@ -4,7 +4,7 @@ import es.urjc.ssii.practica3.entity.DimTiempo;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface DimTiempoRepository extends CrudRepository<DimTiempo, Integer> {
 
-    DimTiempo findByFecha(LocalDate fecha);
+    DimTiempo findByFecha(Date fecha);
 
     List<DimTiempo> findAll();
 }

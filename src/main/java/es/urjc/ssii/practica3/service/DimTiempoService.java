@@ -5,6 +5,7 @@ import es.urjc.ssii.practica3.repository.DimTiempoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -26,13 +27,13 @@ public class DimTiempoService {
     }
 
     public DimTiempo getByFecha(String fecha, DateTimeFormatter formatter) {
-        return repositorio.findByFecha(LocalDate.parse(fecha, formatter));
+        return repositorio.findByFecha(Date.valueOf(LocalDate.parse(fecha, formatter)));
     }
 
     public DimTiempo getByFecha(String fecha) {
         if (fecha.length() > 9)
-            return repositorio.findByFecha(LocalDate.parse(fecha, formatterYYYY));
-        return repositorio.findByFecha(LocalDate.parse(fecha, formatterYY));
+            return repositorio.findByFecha(Date.valueOf(LocalDate.parse(fecha, formatterYYYY)));
+        return repositorio.findByFecha(Date.valueOf(LocalDate.parse(fecha, formatterYY)));
     }
 
     public List<DimTiempo> getAll() {
