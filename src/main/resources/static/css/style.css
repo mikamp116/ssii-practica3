@@ -8,8 +8,16 @@
     border-radius: 10px;
 }
 
+.container-fluid {
+    padding-bottom: 10px;
+}
+
 .nav > .nav-item > .dash-option {
     color: white;
+}
+
+a {
+    cursor: pointer;
 }
 
 .nav > .nav-item > .nav-link.active {
@@ -25,6 +33,19 @@
     margin: 10px;
     background: white;
     border-radius: 20px;
+}
+
+.agrupamiento-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 10px 10px 25px;
+}
+
+.ayuda {
+    padding: 10px 10px 10px 25px;
+    margin-top: -10px;
+    padding-top: -15px;
 }
 
 .choose {
@@ -54,4 +75,8 @@
 
 .container-fluid {
     background: #F0F0F0;
+}
+
+.tablas-prototipo {
+    padding: 15px;
 }

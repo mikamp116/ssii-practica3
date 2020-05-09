@@ -19,16 +19,16 @@
 
     <ul class="nav nav-pills cabecera justify-content-center">
         <li class="nav-item">
-            <a class="nav-link dash-option active" href="#">Home</a>
+            <a class="nav-link dash-option active" id="home">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link dash-option" href="#">Filtrado colaborativo</a>
+            <a class="nav-link dash-option" id="filtrado-btn">Filtrado colaborativo</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link dash-option" href="#">Reglas de asociación</a>
+            <a class="nav-link dash-option" id="asociacion-btn">Reglas de asociación</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link dash-option" href="#" tabindex="-1">Agrupamiento</a>
+            <a class="nav-link dash-option" id="agrupamiento-btn">Agrupamiento</a>
         </li>
     </ul>
 
@@ -38,10 +38,10 @@
             <div class="col-8 grafica">
                 <ul class="nav nav-tabs choose">
                     <li class="nav-item">
-                        <a class="nav-link active">Casos activos</a>
+                        <a class="nav-link active" id="lineas-activo-btn">Casos activos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link">Casos totales</a>
+                        <a class="nav-link" id="lineas-total-btn">Casos totales</a>
                     </li>
                 </ul>
                 <div class="grafica" id="lineas-activo"></div>
@@ -102,88 +102,132 @@
             </div>
         </div>
 
-        <div id="filtrado">
-            <div class="row row-cols-2">
-                <div class="col">
+        <div id="filtrado" style="display: none;">
+            <div class="alert alert-primary alert-dismissible fade show grafica" role="alert">
+                <p class="agrupamiento-text">A continuación se muestran 4 gráficas, una por cada hospital<br>
+                    En cada una de estas aparecen los 20 compuestos en el eje X. La parte izquierda del eje Y representa el
+                    número de veces que ha sido recomendado cada compuesto y corresponde a las barras. La parte derecha del
+                    eje Y representa la valoración del efecto estimado y corresponde con la linea.<br>
+                    A su vez, las barras también indican cuántas veces los compuestos fueran primera, segunda y tercera opción.</p>
+                <p class="ayuda">Más abajo aparecen las tablas con los compuestos recomendados para cada hospital</p>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="row">
+                <div class="col grafica">
                     <div id="chart1">
                     </div>
                 </div>
-                <div class="col">
+                <div class="col grafica">
                     <div id="chart2">
                     </div>
                 </div>
-
-                <div class="col">
+                <div class="w-100"></div>
+                <div class="col grafica">
                     <div id="chart3">
                     </div>
                 </div>
-                <div class="col">
+                <div class="col grafica">
                     <div id="chart4">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col grafica tablas-prototipo">
+                    <p>Hospital 1</p>
+                    <div id="table1">
+                    </div>
+                </div>
+                <div class="col grafica tablas-prototipo">
+                    <p>Hospital 2</p>
+                    <div id="table2">
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col grafica tablas-prototipo">
+                    <p>Hospital 3</p>
+                    <div id="table3">
+                    </div>
+                </div>
+                <div class="col grafica tablas-prototipo">
+                    <p>Hospital 4</p>
+                    <div id="table4">
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="reglas">
-            <p>Reglas éxito</p>
-            <div id="reglasExito"></div>
-            <br>
-            <p>Reglas fallo</p>
-            <div id="reglasFallo"></div>
-            <br>
+        <div id="reglas" style="display: none;">
+            <div class="alert alert-primary alert-dismissible fade show grafica" role="alert">
+                <p class="agrupamiento-text">A continuación, se muestran 2 tablas de reglas de asociación con el
+                    compuesto recomendado<br>
+                    La primera tabla indica que en aquellos pacientes en los que los compuestos de la izquierda dieron
+                    buen resultado,
+                    el recomendado también lo dará<br>
+                    La segunda tabla indica que en aquellos pacientes en los que los compuestos de la izquierda dieron
+                    mal resultado,
+                    el recomendado también lo dará</p>
+                <p class="ayuda"><b>Confidence</b> representa la probabilidad de que, habiendo dado buen/mal
+                    resultado el compuesto recomendado,
+                    también lo hayan dado los compuestos de la izquierda<br>
+                    <b>Lift</b> indica el factor en que se incrementa la probabilidad de que el compuesto recomendado dé
+                    buen/mal resultado
+                    si los de la izquierda también lo han dado<br>Haz clic en la cabecera de cada columna para reordenar
+                </p>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="grafica tablas-prototipo">
+                <p>Reglas éxito</p>
+                <div id="reglasExito"></div>
+            </div>
+            <div class="grafica tablas-prototipo">
+                <p>Reglas fallo</p>
+                <div id="reglasFallo"></div>
+            </div>
         </div>
 
-        <div id="agrupamiento">
-            <p>Pacientes prototipo UCI</p>
-            <div id="prototipoUci"></div>
-            <br>
-            <p>Pacientes prototipo fallecido</p>
-            <div id="prototipoFallecido"></div>
-            <br>
-            <p>Resto de pacientes prototipo</p>
-            <div id="prototipoResto"></div>
-            <br>
+        <div id="agrupamiento" style="display: none;">
+            <div class="alert alert-primary alert-dismissible fade show grafica" role="alert">
+                <p class="agrupamiento-text">A continuación, se muestran 3 pacientes prototipo de cada categoría</p>
+                <p class="ayuda">Haz clic en la cabecera de cada columna para reordenar</p>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="grafica">
+                <div class="tablas-prototipo">
+                    <p>Prototipos de paciente ingresado en UCI</p>
+                    <div id="prototipoUci"></div>
+                </div>
+            </div>
+            <div class="grafica">
+                <div class="tablas-prototipo">
+                    <p>Prototipos de paciente fallecido</p>
+                    <div id="prototipoFallecido"></div>
+                </div>
+            </div>
+            <div class="grafica">
+                <div class="tablas-prototipo">
+                    <p>Prototipos del resto de pacientes</p>
+                    <div id="prototipoResto"></div>
+                </div>
+            </div>
         </div>
-
-        <div class="grafica" id="tablee"></div>
-        <div class="grafica" id="table"></div>
-        <div class="grafica" id="linea2"></div>
-
-
-        <!--        <div class="row row-cols">-->
-        <!--            <div class="col">-->
-        <!--                <div id="rosco1">-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--            <div class="col">-->
-        <!--                <div id="rosco2">-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--            <div class="col">-->
-        <!--                <div id="rosco3">-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--            <div class="col">-->
-        <!--                <div id="rosco4">-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--            <div class="col">-->
-        <!--                <div id="rosco5">-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--        </div>-->
-
 
     </div>
 
 </div>
 
-<div class="container">
+<!--<div class="container">
     <div id="table1"></div>
     <div id="table2"></div>
     <div id="table3"></div>
     <div id="table4"></div>
-</div>
+</div>-->
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -197,6 +241,7 @@
         crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="js/nav-items.js"></script>
 <script type="text/javascript" src="js/dash.js"></script>
 </body>
 </html>
