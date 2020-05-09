@@ -7,6 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ChartsController {
 
     @RequestMapping("/")
-    public String charts(){ return "charts"; }
+    public String dashboard() {
+        return "dashboard";
+    }
+
+    @RequestMapping("/charts")
+    public String charts() {
+        return "charts";
+    }
 
 }

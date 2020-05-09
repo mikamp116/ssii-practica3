@@ -27,13 +27,13 @@ public class DimTiempoService {
     }
 
     public DimTiempo getByFecha(String fecha, DateTimeFormatter formatter) {
-        return repositorio.findByFecha(Date.valueOf(LocalDate.parse(fecha, formatter)));
+        return repositorio.findByFecha(new Date(Date.valueOf(LocalDate.parse(fecha, formatter)).getTime() + 8000000));
     }
 
     public DimTiempo getByFecha(String fecha) {
         if (fecha.length() > 9)
-            return repositorio.findByFecha(Date.valueOf(LocalDate.parse(fecha, formatterYYYY)));
-        return repositorio.findByFecha(Date.valueOf(LocalDate.parse(fecha, formatterYY)));
+            return repositorio.findByFecha(new Date(Date.valueOf(LocalDate.parse(fecha, formatterYYYY)).getTime() + 8000000));
+        return repositorio.findByFecha(new Date(Date.valueOf(LocalDate.parse(fecha, formatterYY)).getTime() + 8000000));
     }
 
     public List<DimTiempo> getAll() {

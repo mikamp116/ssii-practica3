@@ -1,10 +1,7 @@
 package es.urjc.ssii.practica3;
 
 import es.urjc.ssii.practica3.dto.PacientePrototipoDTO;
-import es.urjc.ssii.practica3.entity.DimHospital;
-import es.urjc.ssii.practica3.entity.DimPaciente;
-import es.urjc.ssii.practica3.entity.DimTiempo;
-import es.urjc.ssii.practica3.entity.TablaHechos;
+import es.urjc.ssii.practica3.entity.*;
 import es.urjc.ssii.practica3.entity.opcionA.CompuestoRecomendadoH1;
 import es.urjc.ssii.practica3.entity.opcionA.CompuestoRecomendadoH2;
 import es.urjc.ssii.practica3.entity.opcionA.CompuestoRecomendadoH3;
@@ -24,6 +21,8 @@ import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import weka.associations.Apriori;
+import weka.associations.AssociationRule;
+import weka.associations.Item;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -42,6 +41,7 @@ import java.io.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -59,6 +59,10 @@ public class StartController {
     private TablaHechosService hechosService;
     @Autowired
     private CompuestoRecomendadoService compuestoRecomendadoService;
+    @Autowired
+    private PacientePrototipoService prototipoService;
+    @Autowired
+    private ReglaAsociacionService asociacionService;
 
     @PostConstruct
     public void start() throws Exception {
@@ -132,6 +136,14 @@ public class StartController {
                     else
                         pw.print("\n");
                 }
+
+                PacientePrototipo pp = new PacientePrototipo((int) paciente.value(0), (byte) paciente.value(1),
+                        (int) paciente.value(2), (int) paciente.value(3), paciente.value(4) == 1,
+                        paciente.value(5) == 1, paciente.value(6) == 1,
+                        paciente.value(7) == 1, paciente.value(8) == 1,
+                        paciente.value(9) == 1, paciente.value(10) == 1,
+                        (int) paciente.value(11), paciente.value(12) == 1, filename.substring(5));
+                prototipoService.save(pp);
             }
         }
     }
@@ -163,6 +175,7 @@ public class StartController {
     }
 
     private void loadData() {
+
         String line;
 
         // DimLugar
@@ -347,7 +360,8 @@ public class StartController {
 
         int[] items = new int[3];
         float[] values = new float[3];
-        DataModel model = new FileDataModel(new File("data/datos_filtrado_colaborativo_todos.csv"));
+        File f = new File("data/datos_filtrado_colaborativo_todos.csv");
+        DataModel model = new FileDataModel(f);
         UserSimilarity similarity = new CityBlockSimilarity(model);
         UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1, similarity, model);
         UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
@@ -412,7 +426,6 @@ public class StartController {
             /* Apartado 4.4 - Opcion B: Fin */
 
         }
-        File f = new File("data/datos_filtrado_colaborativo_todos.csv");
         if (f.exists())
             f.delete();
     }
@@ -423,13 +436,13 @@ public class StartController {
         loader.setFieldSeparator(",");
         loader.setNoHeaderRowPresent(false);
 
-        Instances[] data_sources = new Instances[4];
+        Instances[] dataSources = new Instances[4];
         for (int i = 1; i < 5; i++) {
             File source = new File("data/datos_filtrado_colaborativo_" + i + ".csv");
             loader.setSource(source);
-            data_sources[i - 1] = loader.getDataSet();
+            dataSources[i - 1] = loader.getDataSet();
         }
-        Instances data = merge(data_sources);
+        Instances data = merge(dataSources);
 
         // Borra columna de ids
         Remove r = new Remove();
@@ -484,6 +497,19 @@ public class StartController {
         try (PrintWriter pw = new PrintWriter(new File("data/reglasExito.txt"))) {
             pw.println(model);
         }
+        List<AssociationRule> b = model.getAssociationRules().getRules();
+        for (AssociationRule a : b) {
+            StringBuilder sb = new StringBuilder();
+            Collection<Item> premises = a.getPremise();
+            for (Item premise : premises) {
+                sb.append(premise.getAttribute().name().substring(1)).append(',');
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            String consec = a.getConsequence().iterator().next().getAttribute().name().substring(1);
+            double[] values = a.getMetricValuesForRule();
+            ReglaAsociacion ra = new ReglaAsociacion(true, sb.toString(), Integer.parseInt(consec), values[0], values[1], values[2], values[3]);
+            asociacionService.save(ra);
+        }
     }
 
     private void reglasFallo(Instances data) throws Exception {
@@ -513,6 +539,19 @@ public class StartController {
         model.buildAssociations(data);
         try (PrintWriter pw = new PrintWriter(new File("data/reglasFallo.txt"))) {
             pw.println(model);
+        }
+        List<AssociationRule> b = model.getAssociationRules().getRules();
+        for (AssociationRule a : b) {
+            StringBuilder sb = new StringBuilder();
+            Collection<Item> premises = a.getPremise();
+            for (Item premise : premises) {
+                sb.append(premise.getAttribute().name().substring(1)).append(',');
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            String consec = a.getConsequence().iterator().next().getAttribute().name().substring(1);
+            double[] values = a.getMetricValuesForRule();
+            ReglaAsociacion ra = new ReglaAsociacion(false, sb.toString(), Integer.parseInt(consec), values[0], values[1], values[2], values[3]);
+            asociacionService.save(ra);
         }
     }
 
