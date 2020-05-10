@@ -1,9 +1,20 @@
-package es.urjc.ssii.practica3.dto;
+package es.urjc.ssii.practica3.entity;
+
+import javax.persistence.*;
 
 /**
  * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
  */
-public class PacientePrototipoDTO {
+@Entity
+@Table(name = "paciente_prototipo")
+public class PacientePrototipo {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "paciente_prototipo_id")
+    private int pacientePrototipoId;
+
+    private String grupo;
 
     private int edad;
 
@@ -11,6 +22,7 @@ public class PacientePrototipoDTO {
 
     private int imc;
 
+    @Column(name = "forma_fisica")
     private int formaFisica;
 
     private boolean tabaquismo;
@@ -31,9 +43,13 @@ public class PacientePrototipoDTO {
 
     private boolean cancer;
 
-    public PacientePrototipoDTO(int edad, byte sexo, int imc, int formaFisica, boolean tabaquismo, boolean alcoholismo,
-                                boolean colesterol, boolean hipertension, boolean cardiopatia, boolean reuma,
-                                boolean epoc, int hepatitis, boolean cancer) {
+    public PacientePrototipo() {
+    }
+
+    public PacientePrototipo(int edad, byte sexo, int imc, int formaFisica, boolean tabaquismo,
+                             boolean alcoholismo, boolean colesterol, boolean hipertension, boolean cardiopatia,
+                             boolean reuma, boolean epoc, int hepatitis, boolean cancer, String grupo) {
+        this.grupo = grupo;
         this.edad = edad;
         this.sexo = sexo;
         this.imc = imc;
@@ -47,6 +63,22 @@ public class PacientePrototipoDTO {
         this.epoc = epoc;
         this.hepatitis = hepatitis;
         this.cancer = cancer;
+    }
+
+    public String getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
+    }
+
+    public int getPacientePrototipoId() {
+        return pacientePrototipoId;
+    }
+
+    public void setPacientePrototipoId(int pacienteId) {
+        this.pacientePrototipoId = pacienteId;
     }
 
     public int getEdad() {
@@ -153,8 +185,36 @@ public class PacientePrototipoDTO {
         this.cancer = cancer;
     }
 
-    public double[] toArray() {
-        return new double[]{edad, sexo, imc, formaFisica, tabaquismo ? 1 : 0, alcoholismo ? 1 : 0, colesterol ? 1 : 0,
-                hipertension ? 1 : 0, cardiopatia ? 1 : 0, reuma ? 1 : 0, epoc ? 1 : 0, hepatitis, cancer ? 1 : 0};
+    @Override
+    public String toString() {
+        String toReturn = "DimPaciente{" +
+                "id=" + pacientePrototipoId +
+                ", edad=" + edad +
+                ", sexo=" + sexo +
+                ", imc=" + imc +
+                ", formaFisica=" + formaFisica +
+                ", grupo=" + grupo +
+                ", tiene: {";
+        if (tabaquismo)
+            toReturn += "tabaquismo, ";
+        if (alcoholismo)
+            toReturn += "alcoholismo, ";
+        if (colesterol)
+            toReturn += "colesterol, ";
+        if (hipertension)
+            toReturn += "hipertension, ";
+        if (cardiopatia)
+            toReturn += "cardiopatia, ";
+        if (reuma)
+            toReturn += "reuma, ";
+        if (epoc)
+            toReturn += "epoc, ";
+        if (hepatitis > 0)
+            toReturn += "hepatitis=" + hepatitis + ", ";
+        if (cancer)
+            toReturn += "cancer";
+        toReturn += "}}";
+
+        return toReturn;
     }
 }

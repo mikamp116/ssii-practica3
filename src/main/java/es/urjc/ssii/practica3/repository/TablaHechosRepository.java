@@ -13,4 +13,8 @@ import java.util.List;
 public interface TablaHechosRepository extends CrudRepository<TablaHechos, Integer> {
 
     List<TablaHechos> findAll();
+
+    List<TablaHechos> findByTratamientoAndFallecido(Integer tratamiento, boolean fallecido);
+
+    Integer countByTratamientoAndFallecido(Integer tratamiento, boolean fallecido);
 }

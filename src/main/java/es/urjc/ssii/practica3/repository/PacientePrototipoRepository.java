@@ -1,19 +1,18 @@
 package es.urjc.ssii.practica3.repository;
 
-import es.urjc.ssii.practica3.entity.DimTiempo;
+import es.urjc.ssii.practica3.entity.PacientePrototipo;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.util.List;
 
 /**
  * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
  */
 @Repository
-public interface DimTiempoRepository extends CrudRepository<DimTiempo, Integer> {
+public interface PacientePrototipoRepository extends CrudRepository<PacientePrototipo, Integer> {
 
-    DimTiempo findByFecha(Date fecha);
+    List<PacientePrototipo> findAll();
 
-    List<DimTiempo> findAll();
+    List<PacientePrototipo> findByGrupo(String grupo);
 }
