@@ -36,7 +36,7 @@ public class ClusteringService {
         List<String> sexo = new ArrayList<>(Arrays.asList("V", "M"));
         List<String> numericRange = new ArrayList<>(Arrays.asList("0", "1", "2", "3"));
 
-        // Crea los atributos de los pacieentes y les asina sus posibles valores
+        // Crea los atributos de los pacientes y les asigna sus posibles valores
         ArrayList<Attribute> attInfo = new ArrayList<>();
         attInfo.add(new Attribute("Edad"));
         attInfo.add(new Attribute("Sexo", sexo));

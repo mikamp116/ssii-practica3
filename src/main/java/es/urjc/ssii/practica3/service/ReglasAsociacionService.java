@@ -54,7 +54,7 @@ public class ReglasAsociacionService {
         r.setInputFormat(data);
         data = Filter.useFilter(data, r);
 
-        // Obtiene las reglas de exito y fallo, pasando como parametro el Instance con toda la informacion anterior
+        // Obtiene las reglas de exito y fallo
         reglasExito(new Instances(data));
         reglasFallo(data);
     }
@@ -128,7 +128,7 @@ public class ReglasAsociacionService {
     }
 
     private void reglasFallo(Instances data) throws Exception {
-        // Tranformacion de ceros en un numero mayor a 3
+        // Transformacion de ceros en un numero mayor a 3
         NumericTransform nt = new NumericTransform();
         nt.setAttributeIndices("first-last");
         nt.setClassName("es.urjc.ssii.practica3.service.ReglasAsociacionService");
