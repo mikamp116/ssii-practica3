@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 @Entity
 @Table(name = "dim_hospital")

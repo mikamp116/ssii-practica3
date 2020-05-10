@@ -1,3 +1,7 @@
+/**
+ * @author Mikayel Mardanyan Petrosyan
+ */
+
 const homeBtn = $("#home");
 const reglasBtn = $("#asociacion-btn")
 const agrupamientoBtn = $("#agrupamiento-btn")

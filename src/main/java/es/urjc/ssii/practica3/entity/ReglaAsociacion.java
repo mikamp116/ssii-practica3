@@ -3,7 +3,7 @@ package es.urjc.ssii.practica3.entity;
 import javax.persistence.*;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 @Entity
 @Table(name = "regla_asociacion")
@@ -21,8 +21,11 @@ public class ReglaAsociacion {
     private int recomendado;
 
     private double conf;
+
     private double lift;
+
     private double lev;
+
     private double conv;
 
     public ReglaAsociacion() {

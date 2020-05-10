@@ -3,19 +3,21 @@ package es.urjc.ssii.practica3.service;
 import es.urjc.ssii.practica3.dto.PacientePrototipoDTO;
 import es.urjc.ssii.practica3.entity.DimPaciente;
 import es.urjc.ssii.practica3.repository.DimPacienteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 @Service
 public class DimPacienteService {
 
-    @Autowired
-    private DimPacienteRepository repositorio;
+    private final DimPacienteRepository repositorio;
+
+    public DimPacienteService(DimPacienteRepository repositorio) {
+        this.repositorio = repositorio;
+    }
 
     public void save(DimPaciente paciente) {
         repositorio.save(paciente);

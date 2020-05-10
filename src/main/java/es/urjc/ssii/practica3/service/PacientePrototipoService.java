@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 @Service
 public class PacientePrototipoService {

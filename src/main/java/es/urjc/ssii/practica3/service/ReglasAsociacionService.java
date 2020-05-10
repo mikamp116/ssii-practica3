@@ -1,18 +1,6 @@
 package es.urjc.ssii.practica3.service;
 
-import es.urjc.ssii.practica3.entity.CompuestoRecomendado;
 import es.urjc.ssii.practica3.entity.ReglaAsociacion;
-import org.apache.mahout.cf.taste.common.TasteException;
-import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
-import org.apache.mahout.cf.taste.impl.neighborhood.ThresholdUserNeighborhood;
-import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
-import org.apache.mahout.cf.taste.impl.similarity.CityBlockSimilarity;
-import org.apache.mahout.cf.taste.model.DataModel;
-import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
-import org.apache.mahout.cf.taste.recommender.RecommendedItem;
-import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
-import org.apache.mahout.cf.taste.similarity.UserSimilarity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import weka.associations.Apriori;
 import weka.associations.AssociationRule;
@@ -27,30 +15,22 @@ import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.NumericTransform;
 import weka.filters.unsupervised.attribute.Remove;
 
-import java.io.*;
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.List;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 @Service
 public class ReglasAsociacionService {
 
-    @Autowired
-    private DimHospitalService hospitalService;
-    @Autowired
-    private DimPacienteService pacienteService;
-    @Autowired
-    private DimTiempoService tiempoService;
-    @Autowired
-    private TablaHechosService hechosService;
-    @Autowired
-    private CompuestoRecomendadoService compuestoRecomendadoService;
-    @Autowired
-    private PacientePrototipoService prototipoService;
-    @Autowired
-    private ReglaAsociacionService asociacionService;
+    private final ReglaAsociacionService asociacionService;
+
+    public ReglasAsociacionService(ReglaAsociacionService asociacionService) {
+        this.asociacionService = asociacionService;
+    }
 
     public void reglasAsociacion() throws Exception {
 
@@ -58,12 +38,14 @@ public class ReglasAsociacionService {
         loader.setFieldSeparator(",");
         loader.setNoHeaderRowPresent(false);
 
+        // Array con los objetos Instances que va a obtener de cada fichero csv
         Instances[] dataSources = new Instances[4];
         for (int i = 1; i < 5; i++) {
             File source = new File("data/datos_filtrado_colaborativo_" + i + ".csv");
             loader.setSource(source);
             dataSources[i - 1] = loader.getDataSet();
         }
+        // Une los distintos Instances en uno solo
         Instances data = merge(dataSources);
 
         // Borra columna de ids
@@ -72,6 +54,7 @@ public class ReglasAsociacionService {
         r.setInputFormat(data);
         data = Filter.useFilter(data, r);
 
+        // Obtiene las reglas de exito y fallo
         reglasExito(new Instances(data));
         reglasFallo(data);
     }
@@ -100,6 +83,7 @@ public class ReglasAsociacionService {
     }
 
     private void reglasExito(Instances data) throws Exception {
+
         // Inserta los missing values
         NumericCleaner nc = new NumericCleaner();
         nc.setMinThreshold(3.5);
@@ -114,28 +98,37 @@ public class ReglasAsociacionService {
         data = Filter.useFilter(data, nn);
 
         Apriori model = new Apriori();
-
         model.buildAssociations(data);
-        try (PrintWriter pw = new PrintWriter(new File("data/reglasExito.txt"))) {
+
+        // Escribe las reglas en el fichero
+        try (PrintWriter pw = new PrintWriter(new File("entregables/reglasExito.txt"))) {
             pw.println(model);
         }
-        List<AssociationRule> b = model.getAssociationRules().getRules();
-        for (AssociationRule a : b) {
+
+        // Obtiene las reglas calculadas
+        List<AssociationRule> associationRules = model.getAssociationRules().getRules();
+        // Para cada regla
+        for (AssociationRule rule : associationRules) {
             StringBuilder sb = new StringBuilder();
-            Collection<Item> premises = a.getPremise();
+            // Obtiene las premisas de la implicacion y las guarda en una cadena de caracteres
+            Collection<Item> premises = rule.getPremise();
             for (Item premise : premises) {
                 sb.append(premise.getAttribute().name().substring(1)).append(',');
             }
             sb.deleteCharAt(sb.length() - 1);
-            String consec = a.getConsequence().iterator().next().getAttribute().name().substring(1);
-            double[] values = a.getMetricValuesForRule();
+            // Obtiene el consecuente
+            String consec = rule.getConsequence().iterator().next().getAttribute().name().substring(1);
+            // Obtiene las metricas: conf, lift, lev y conv
+            double[] values = rule.getMetricValuesForRule();
+
+            // Crea un objeto y lo guarda en la base de datos
             ReglaAsociacion ra = new ReglaAsociacion(true, sb.toString(), Integer.parseInt(consec), values[0], values[1], values[2], values[3]);
             asociacionService.save(ra);
         }
     }
 
     private void reglasFallo(Instances data) throws Exception {
-        // Tranformacion de ceros en un numero mayor a 3
+        // Transformacion de ceros en un numero mayor a 3
         NumericTransform nt = new NumericTransform();
         nt.setAttributeIndices("first-last");
         nt.setClassName("es.urjc.ssii.practica3.service.ReglasAsociacionService");
@@ -157,21 +150,30 @@ public class ReglasAsociacionService {
         data = Filter.useFilter(data, nn);
 
         Apriori model = new Apriori();
-
         model.buildAssociations(data);
-        try (PrintWriter pw = new PrintWriter(new File("data/reglasFallo.txt"))) {
+
+        // Escribe las reglas en el fichero
+        try (PrintWriter pw = new PrintWriter(new File("entregables/reglasFallo.txt"))) {
             pw.println(model);
         }
-        List<AssociationRule> b = model.getAssociationRules().getRules();
-        for (AssociationRule a : b) {
+
+        // Obtiene las reglas calculadas
+        List<AssociationRule> associationRules = model.getAssociationRules().getRules();
+        // Para cada regla
+        for (AssociationRule rule : associationRules) {
             StringBuilder sb = new StringBuilder();
-            Collection<Item> premises = a.getPremise();
+            // Obtiene las premisas de la implicacion y las guarda en una cadena de caracteres
+            Collection<Item> premises = rule.getPremise();
             for (Item premise : premises) {
                 sb.append(premise.getAttribute().name().substring(1)).append(',');
             }
             sb.deleteCharAt(sb.length() - 1);
-            String consec = a.getConsequence().iterator().next().getAttribute().name().substring(1);
-            double[] values = a.getMetricValuesForRule();
+            // Obtiene el consecuente
+            String consec = rule.getConsequence().iterator().next().getAttribute().name().substring(1);
+            // Obtiene las metricas: conf, lift, lev y conv
+            double[] values = rule.getMetricValuesForRule();
+
+            // Crea un objeto y lo guarda en la base de datos
             ReglaAsociacion ra = new ReglaAsociacion(false, sb.toString(), Integer.parseInt(consec), values[0], values[1], values[2], values[3]);
             asociacionService.save(ra);
         }

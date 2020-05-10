@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.util.List;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 @Repository
 public interface DimTiempoRepository extends CrudRepository<DimTiempo, Integer> {

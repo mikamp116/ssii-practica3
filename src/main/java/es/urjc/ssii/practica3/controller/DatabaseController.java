@@ -1,51 +1,43 @@
 package es.urjc.ssii.practica3.controller;
 
-import es.urjc.ssii.practica3.entity.DimTiempo;
-import es.urjc.ssii.practica3.entity.PacientePrototipo;
-import es.urjc.ssii.practica3.entity.ReglaAsociacion;
-import es.urjc.ssii.practica3.entity.TablaHechos;
-import es.urjc.ssii.practica3.entity.CompuestoRecomendado;
+import es.urjc.ssii.practica3.entity.*;
 import es.urjc.ssii.practica3.repository.DimTiempoRepository;
-import es.urjc.ssii.practica3.repository.TablaHechosRepository;
-import es.urjc.ssii.practica3.repository.CompuestoRecomendadoRepository;
-import es.urjc.ssii.practica3.service.PacientePrototipoService;
-import es.urjc.ssii.practica3.service.ReglaAsociacionService;
+import es.urjc.ssii.practica3.service.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import weka.Run;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 @RestController
 public class DatabaseController {
 
-    private final CompuestoRecomendadoRepository repository;
-    private final TablaHechosRepository hechosRepository;
-    private final DimTiempoRepository tiempoRepository;
+    private final CompuestoRecomendadoService compuestoRecomendadoService;
+    private final TablaHechosService hechosService;
+    private final DimTiempoService tiempoService;
     private final PacientePrototipoService prototipoService;
     private final ReglaAsociacionService asociacionService;
+    private final DimTiempoRepository tiempoRepository;
 
-    public DatabaseController(CompuestoRecomendadoRepository repository, TablaHechosRepository hechosRepository, DimTiempoRepository tiempoRepository,
-                              PacientePrototipoService prototipoService, ReglaAsociacionService asociacionService) {
-        this.repository = repository;
-        this.hechosRepository = hechosRepository;
-        this.tiempoRepository = tiempoRepository;
+    public DatabaseController(CompuestoRecomendadoService compuestoRecomendadoService, TablaHechosService tablaHechosService,
+                              DimTiempoService tiempoService, PacientePrototipoService prototipoService,
+                              ReglaAsociacionService asociacionService, DimTiempoRepository tiempoRepository) {
+        this.compuestoRecomendadoService = compuestoRecomendadoService;
+        this.hechosService = tablaHechosService;
+        this.tiempoService = tiempoService;
         this.prototipoService = prototipoService;
         this.asociacionService = asociacionService;
+        this.tiempoRepository = tiempoRepository;
     }
 
     @GetMapping("/compuesto-recomendado")
     public List<CompuestoRecomendado> all() {
-
-        return repository.findAll();
+        return compuestoRecomendadoService.getAll();
     }
 
     @GetMapping("/numeros")
@@ -62,8 +54,7 @@ public class DatabaseController {
 
     @GetMapping("/hechos")
     public List<TablaHechos> hechos() {
-
-        return hechosRepository.findAll();
+        return hechosService.getAll();
     }
 
     @GetMapping("/tiempos")
@@ -101,26 +92,22 @@ public class DatabaseController {
 
     @GetMapping("/fallecidos/{tratamiento}")
     public List<TablaHechos> fallecidos(@PathVariable int tratamiento) {
-
-        return hechosRepository.findByTratamientoAndFallecido(tratamiento, true);
+        return hechosService.getFallecidos(tratamiento);
     }
 
     @GetMapping("/no_fallecidos/{tratamiento}")
     public List<TablaHechos> noFallecidos(@PathVariable int tratamiento) {
-
-        return hechosRepository.findByTratamientoAndFallecido(tratamiento, false);
+        return hechosService.getNoFallecidos(tratamiento);
     }
 
     @GetMapping("/num_fallecidos/{tratamiento}")
-    public int numFallecidos(@PathVariable Integer tratamiento) {
-
-        return hechosRepository.countByTratamientoAndFallecido(tratamiento, true);
+    public int numFallecidos(@PathVariable int tratamiento) {
+        return hechosService.getNumFallecidos(tratamiento);
     }
 
     @GetMapping("/num_no_fallecidos/{tratamiento}")
-    public int numNoFallecidos(@PathVariable Integer tratamiento) {
-
-        return hechosRepository.countByTratamientoAndFallecido(tratamiento, false);
+    public int numNoFallecidos(@PathVariable int tratamiento) {
+        return hechosService.getNumNoFallecidos(tratamiento);
     }
 
     @GetMapping("/prototipo_uci")

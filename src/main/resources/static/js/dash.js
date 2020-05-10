@@ -1,3 +1,7 @@
+/**
+ * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ */
+
 google.charts.load('current', {'packages': ['corechart', 'table']});
 
 drawNumbers();

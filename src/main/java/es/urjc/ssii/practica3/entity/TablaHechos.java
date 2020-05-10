@@ -3,7 +3,7 @@ package es.urjc.ssii.practica3.entity;
 import javax.persistence.*;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 @Entity
 @Table(name = "tabla_hechos")

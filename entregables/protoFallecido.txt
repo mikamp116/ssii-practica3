@@ -1,0 +1,3 @@
+Paciente prototipo 0: Edad=54,6, Sexo=V, IMC=26,0, Forma física=2, Tabaquismo=Si, Alcoholismo=No, Colesterol=Si, Hipertensión=No, Cardiopatia=Si, Reuma=Si, EPOC=Si, Hepatitis=0, Cáncer=Si
+Paciente prototipo 1: Edad=66,0, Sexo=M, IMC=28,1, Forma física=3, Tabaquismo=No, Alcoholismo=Si, Colesterol=No, Hipertensión=No, Cardiopatia=Si, Reuma=Si, EPOC=No, Hepatitis=0, Cáncer=No
+Paciente prototipo 2: Edad=70,3, Sexo=V, IMC=27,5, Forma física=1, Tabaquismo=No, Alcoholismo=Si, Colesterol=Si, Hipertensión=Si, Cardiopatia=No, Reuma=No, EPOC=No, Hepatitis=1, Cáncer=Si
