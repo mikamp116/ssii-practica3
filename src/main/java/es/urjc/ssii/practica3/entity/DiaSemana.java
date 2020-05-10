@@ -1,7 +1,7 @@
 package es.urjc.ssii.practica3.entity;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 public enum DiaSemana {
     LUNES("lunes"), MARTES("martes"), MIERCOLES("miercoles"), JUEVES("jueves"),

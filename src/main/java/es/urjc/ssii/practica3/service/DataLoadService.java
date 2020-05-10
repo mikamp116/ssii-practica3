@@ -4,7 +4,6 @@ import es.urjc.ssii.practica3.entity.DimHospital;
 import es.urjc.ssii.practica3.entity.DimPaciente;
 import es.urjc.ssii.practica3.entity.DimTiempo;
 import es.urjc.ssii.practica3.entity.TablaHechos;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -14,19 +13,22 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 @Service
 public class DataLoadService {
 
-    @Autowired
-    private DimHospitalService hospitalService;
-    @Autowired
-    private DimPacienteService pacienteService;
-    @Autowired
-    private DimTiempoService tiempoService;
-    @Autowired
-    private TablaHechosService hechosService;
+    private final DimHospitalService hospitalService;
+    private final DimPacienteService pacienteService;
+    private final DimTiempoService tiempoService;
+    private final TablaHechosService hechosService;
+
+    public DataLoadService(DimHospitalService hospitalService, DimPacienteService pacienteService, DimTiempoService tiempoService, TablaHechosService hechosService) {
+        this.hospitalService = hospitalService;
+        this.pacienteService = pacienteService;
+        this.tiempoService = tiempoService;
+        this.hechosService = hechosService;
+    }
 
     public void loadData() {
 

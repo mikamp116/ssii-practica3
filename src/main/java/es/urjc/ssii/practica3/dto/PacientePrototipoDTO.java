@@ -1,7 +1,7 @@
 package es.urjc.ssii.practica3.dto;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 public class PacientePrototipoDTO {
 

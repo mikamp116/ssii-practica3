@@ -1,30 +1,42 @@
 package es.urjc.ssii.practica3;
 
-import es.urjc.ssii.practica3.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import es.urjc.ssii.practica3.service.ClusteringService;
+import es.urjc.ssii.practica3.service.DataLoadService;
+import es.urjc.ssii.practica3.service.FiltradoColaborativoService;
+import es.urjc.ssii.practica3.service.ReglasAsociacionService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 @Component
 public class Start {
-    @Autowired
-    private DataLoadService dataLoadService;
-    @Autowired
-    private FiltradoColaborativoService filtradoColaborativoService;
-    @Autowired
-    private ReglasAsociacionService reglasAsociacionService;
-    @Autowired
-    private ClusteringService clusteringService;
+
+    private final DataLoadService dataLoadService;
+    private final FiltradoColaborativoService filtradoColaborativoService;
+    private final ReglasAsociacionService reglasAsociacionService;
+    private final ClusteringService clusteringService;
+
+    public Start(DataLoadService dataLoadService, FiltradoColaborativoService filtradoColaborativoService,
+                 ReglasAsociacionService reglasAsociacionService, ClusteringService clusteringService) {
+        this.dataLoadService = dataLoadService;
+        this.filtradoColaborativoService = filtradoColaborativoService;
+        this.reglasAsociacionService = reglasAsociacionService;
+        this.clusteringService = clusteringService;
+    }
 
     @PostConstruct
     public void start() throws Exception {
+
+        // Apartado 2
         dataLoadService.loadData();
+        // Apartado 4
         filtradoColaborativoService.filtradoColaborativo();
+        // Apartado 5
         reglasAsociacionService.reglasAsociacion();
+        // Apartado 6
         clusteringService.clustering();
     }
 }

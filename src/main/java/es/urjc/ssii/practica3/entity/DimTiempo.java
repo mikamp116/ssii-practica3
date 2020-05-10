@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 @Entity
 @Table(name = "dim_tiempo")
@@ -59,6 +59,7 @@ public class DimTiempo {
     public DimTiempo(int id, String fecha, String dia, String mes, String anio, String cuatri, String diaSemana,
                      String esFinde) {
         this.tiempoId = id;
+        // Se suma el offset en milisegundos de UTC a GMT para obtener la fecha correcta
         this.fecha = new Date(Date.valueOf(LocalDate.parse(fecha, formatter)).getTime() + 8000000);
         this.dia = Integer.parseInt(dia);
         this.mes = Integer.parseInt(mes);

@@ -2,19 +2,21 @@ package es.urjc.ssii.practica3.service;
 
 import es.urjc.ssii.practica3.entity.DimHospital;
 import es.urjc.ssii.practica3.repository.DimHospitalRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
+ * @author Mikayel Mardanyan Petrosyan
  */
 @Service
 public class DimHospitalService {
 
-    @Autowired
-    private DimHospitalRepository repositorio;
+    private final DimHospitalRepository repositorio;
+
+    public DimHospitalService(DimHospitalRepository repositorio) {
+        this.repositorio = repositorio;
+    }
 
     public void save(DimHospital hospital) {
         repositorio.save(hospital);
