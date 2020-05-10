@@ -156,7 +156,7 @@ async function drawChart() {
         title: 'Compuestos recomendados en Hospital 1',
         width: 850,
         height: 410,
-        legend: {position: 'top', maxLines: 3},
+        legend: {position: 'bottom'},
         isStacked: true,
         vAxes: {0: {title: 'Veces recomendado'}, 1: {title: 'Valoración de efecto estimado'}},
         hAxis: {title: 'Compuesto'},
@@ -169,6 +169,7 @@ async function drawChart() {
         }
     };
 
+    $('#filtrado').show();
     var chart1 = new google.visualization.ComboChart(document.getElementById('chart1'));
     chart1.draw(data1, options);
 
@@ -183,7 +184,6 @@ async function drawChart() {
     options.title = 'Compuestos recomendados en Hospital 4';
     var chart4 = new google.visualization.ComboChart(document.getElementById('chart4'));
     chart4.draw(data4, options);
-
 
     var datas = [];
     for (let i = 0; i < 4; i++) {
@@ -225,6 +225,7 @@ async function drawChart() {
 
     var table4 = new google.visualization.Table(document.getElementById('table4'));
     table4.draw(datas[3], options);
+    $('#filtrado').hide();
 
     /* GRAFICOS DE BARRAS END*/
 }
@@ -267,6 +268,8 @@ async function drawPrototipos() {
     /* GRAFICOS DE PROTOTIPOS END */
     let optionsPrototipos = {showRowNumber: true, width: '100%', height: '100%'};
 
+    $('#agrupamiento').show();
+
     let prototiposUci = await getResponse('prototipo_uci');
     let prototiposUciDataTable = getPrototipoDataTable(prototiposUci);
     let tableUci = new google.visualization.Table(document.getElementById('prototipoUci'));
@@ -281,6 +284,7 @@ async function drawPrototipos() {
     let prototiposRestoDataTable = getPrototipoDataTable(prototiposResto);
     let tableResto = new google.visualization.Table(document.getElementById('prototipoResto'));
     tableResto.draw(prototiposRestoDataTable, optionsPrototipos);
+    $('#agrupamiento').hide();
 }
 
 function getReglasDataTable(reglas){
@@ -338,6 +342,7 @@ function getReglasDataTable(reglas){
 
 async function drawReglas() {
 
+    $('#reglas').show();
     let reglasExito = await getResponse('reglas_exito');
     let tableExito = new google.visualization.Table(document.getElementById('reglasExito'));
     let reglasExitoData = getReglasDataTable(reglasExito);
@@ -347,6 +352,7 @@ async function drawReglas() {
     let tableFallo = new google.visualization.Table(document.getElementById('reglasFallo'));
     let reglasFalloData = getReglasDataTable(reglasFallo);
     tableFallo.draw(reglasFalloData, {showRowNumber: true, width: '100%', height: '100%'});
+    $('#reglas').hide();
 
 }
 
