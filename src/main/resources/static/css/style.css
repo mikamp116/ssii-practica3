@@ -20,6 +20,12 @@
     color: white;
 }
 
+.tratamientos {
+    margin-left: 50px;
+    padding-left: 200px;
+    padding-right: 200px;
+}
+
 a {
     cursor: pointer;
 }

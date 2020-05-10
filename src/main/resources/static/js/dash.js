@@ -200,12 +200,19 @@ async function drawChart() {
         ['Bob', {v: 7000, f: '$7,000'}, true]
     ]);*/
 
+    let id = 1
+    let hospitalAnterior = 1
     compuestos.forEach((compuesto) => {
-        line = [compuesto.pacienteId];
+        if (compuesto.hospital > hospitalAnterior) {
+            hospitalAnterior = compuesto.hospital
+            id = 1
+        }
+        line = [id];
         line.push(compuesto.item1 !== 0 ? compuesto.item1 : NaN);
         line.push(compuesto.item2 !== 0 ? compuesto.item2 : NaN);
         line.push(compuesto.item3 !== 0 ? compuesto.item3 : NaN);
         datas[compuesto.hospital - 1].addRow(line)
+        id += 1
     });
 
     options = {
