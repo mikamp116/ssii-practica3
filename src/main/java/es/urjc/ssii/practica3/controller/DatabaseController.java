@@ -1,40 +1,40 @@
-package es.urjc.ssii.practica3;
+package es.urjc.ssii.practica3.controller;
 
 import es.urjc.ssii.practica3.entity.DimTiempo;
 import es.urjc.ssii.practica3.entity.PacientePrototipo;
 import es.urjc.ssii.practica3.entity.ReglaAsociacion;
 import es.urjc.ssii.practica3.entity.TablaHechos;
-import es.urjc.ssii.practica3.entity.opcionA.CompuestoRecomendadoH1;
-import es.urjc.ssii.practica3.entity.opcionB.CompuestoRecomendado;
+import es.urjc.ssii.practica3.entity.CompuestoRecomendado;
 import es.urjc.ssii.practica3.repository.DimTiempoRepository;
 import es.urjc.ssii.practica3.repository.TablaHechosRepository;
-import es.urjc.ssii.practica3.repository.opcionA.CompuestoRecomendadoH1Repository;
-import es.urjc.ssii.practica3.repository.opcionB.CompuestoRecomendadoRepository;
+import es.urjc.ssii.practica3.repository.CompuestoRecomendadoRepository;
 import es.urjc.ssii.practica3.service.PacientePrototipoService;
 import es.urjc.ssii.practica3.service.ReglaAsociacionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import weka.Run;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
  */
 @RestController
-public class DashboardController {
+public class DatabaseController {
 
-    private final CompuestoRecomendadoH1Repository repositoryH1;
     private final CompuestoRecomendadoRepository repository;
     private final TablaHechosRepository hechosRepository;
     private final DimTiempoRepository tiempoRepository;
     private final PacientePrototipoService prototipoService;
     private final ReglaAsociacionService asociacionService;
 
-    public DashboardController(CompuestoRecomendadoH1Repository repositoryH1, CompuestoRecomendadoRepository repository,
-                               TablaHechosRepository hechosRepository, DimTiempoRepository tiempoRepository,
-                               PacientePrototipoService prototipoService, ReglaAsociacionService asociacionService) {
-        this.repositoryH1 = repositoryH1;
+    public DatabaseController(CompuestoRecomendadoRepository repository, TablaHechosRepository hechosRepository, DimTiempoRepository tiempoRepository,
+                              PacientePrototipoService prototipoService, ReglaAsociacionService asociacionService) {
         this.repository = repository;
         this.hechosRepository = hechosRepository;
         this.tiempoRepository = tiempoRepository;
@@ -42,16 +42,21 @@ public class DashboardController {
         this.asociacionService = asociacionService;
     }
 
-    @GetMapping("/compuesto-recomendado1")
-    public List<CompuestoRecomendadoH1> h1() {
-
-        return repositoryH1.findAll();
-    }
-
     @GetMapping("/compuesto-recomendado")
     public List<CompuestoRecomendado> all() {
 
         return repository.findAll();
+    }
+
+    @GetMapping("/numeros")
+    public List<Integer> getNumeros() {
+        List<TablaHechos> hechos = hechos();
+        List<Integer> numeros = new ArrayList<>();
+
+        numeros.add(hechos.size());
+        numeros.add(Math.toIntExact(hechos.stream().filter(TablaHechos::isUci).count()));
+        numeros.add(Math.toIntExact(hechos.stream().filter(TablaHechos::isFallecido).count()));
+        return numeros;
     }
 
 
@@ -64,7 +69,34 @@ public class DashboardController {
     @GetMapping("/tiempos")
     public List<DimTiempo> tiempos() {
 
-        return tiempoRepository.findAll();
+        int primerIngresoFechaId = getPrimerIngresoFechaId();
+        int ultimaAltaFechaId = getUltimaAltaFechaId();
+
+        return tiempoRepository.findBetweenIds(primerIngresoFechaId, ultimaAltaFechaId);
+    }
+
+    private int getPrimerIngresoFechaId(){
+        List<TablaHechos> hechos = hechos();
+        TablaHechos hechoOptional = hechos.stream().min(Comparator.comparingInt(h -> h.getFechaIngresoId().getTiempoId())).
+                orElse(null);
+
+        if (hechoOptional == null){
+            throw new RuntimeException("Tabla de hechos vacia.");
+        }
+
+        return hechoOptional.getFechaIngresoId().getTiempoId();
+    }
+
+    private int getUltimaAltaFechaId(){
+        List<TablaHechos> hechos = hechos();
+        TablaHechos hechoOptional = hechos.stream().max(Comparator.comparingInt(h -> h.getFechaIngresoId().getTiempoId() + h.getDuracion())).
+                orElse(null);
+
+        if (hechoOptional == null){
+            throw new RuntimeException("Tabla de hechos vacia.");
+        }
+
+        return hechoOptional.getFechaIngresoId().getTiempoId() + hechoOptional.getDuracion();
     }
 
     @GetMapping("/fallecidos/{tratamiento}")
