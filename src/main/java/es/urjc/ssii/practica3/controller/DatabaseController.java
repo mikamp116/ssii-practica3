@@ -1,15 +1,13 @@
-package es.urjc.ssii.practica3;
+package es.urjc.ssii.practica3.controller;
 
 import es.urjc.ssii.practica3.entity.DimTiempo;
 import es.urjc.ssii.practica3.entity.PacientePrototipo;
 import es.urjc.ssii.practica3.entity.ReglaAsociacion;
 import es.urjc.ssii.practica3.entity.TablaHechos;
-import es.urjc.ssii.practica3.entity.opcionA.CompuestoRecomendadoH1;
-import es.urjc.ssii.practica3.entity.opcionB.CompuestoRecomendado;
+import es.urjc.ssii.practica3.entity.CompuestoRecomendado;
 import es.urjc.ssii.practica3.repository.DimTiempoRepository;
 import es.urjc.ssii.practica3.repository.TablaHechosRepository;
-import es.urjc.ssii.practica3.repository.opcionA.CompuestoRecomendadoH1Repository;
-import es.urjc.ssii.practica3.repository.opcionB.CompuestoRecomendadoRepository;
+import es.urjc.ssii.practica3.repository.CompuestoRecomendadoRepository;
 import es.urjc.ssii.practica3.service.PacientePrototipoService;
 import es.urjc.ssii.practica3.service.ReglaAsociacionService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,30 +20,21 @@ import java.util.List;
  * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
  */
 @RestController
-public class DashboardController {
+public class DatabaseController {
 
-    private final CompuestoRecomendadoH1Repository repositoryH1;
     private final CompuestoRecomendadoRepository repository;
     private final TablaHechosRepository hechosRepository;
     private final DimTiempoRepository tiempoRepository;
     private final PacientePrototipoService prototipoService;
     private final ReglaAsociacionService asociacionService;
 
-    public DashboardController(CompuestoRecomendadoH1Repository repositoryH1, CompuestoRecomendadoRepository repository,
-                               TablaHechosRepository hechosRepository, DimTiempoRepository tiempoRepository,
-                               PacientePrototipoService prototipoService, ReglaAsociacionService asociacionService) {
-        this.repositoryH1 = repositoryH1;
+    public DatabaseController(CompuestoRecomendadoRepository repository, TablaHechosRepository hechosRepository, DimTiempoRepository tiempoRepository,
+                              PacientePrototipoService prototipoService, ReglaAsociacionService asociacionService) {
         this.repository = repository;
         this.hechosRepository = hechosRepository;
         this.tiempoRepository = tiempoRepository;
         this.prototipoService = prototipoService;
         this.asociacionService = asociacionService;
-    }
-
-    @GetMapping("/compuesto-recomendado1")
-    public List<CompuestoRecomendadoH1> h1() {
-
-        return repositoryH1.findAll();
     }
 
     @GetMapping("/compuesto-recomendado")

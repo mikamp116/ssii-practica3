@@ -1,4 +1,4 @@
-package es.urjc.ssii.practica3.entity.opcionA;
+package es.urjc.ssii.practica3.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,12 +9,14 @@ import javax.persistence.Table;
  * @author Victor Fernandez Fernandez, Mikayel Mardanyan Petrosyan
  */
 @Entity
-@Table(name = "compuesto_recomendado_h4")
-public class CompuestoRecomendadoH4 {
+@Table(name = "compuesto_recomendado")
+public class CompuestoRecomendado {
 
     @Id
     @Column(name = "paciente_id")
     private int pacienteId;
+
+    private int hospital;
 
     private int item1;
 
@@ -28,11 +30,12 @@ public class CompuestoRecomendadoH4 {
 
     private float value3;
 
-    public CompuestoRecomendadoH4() {
+    public CompuestoRecomendado() {
     }
 
-    public CompuestoRecomendadoH4(int id, int i1, float v1, int i2, float v2, int i3, float v3) {
+    public CompuestoRecomendado(int id, int hospital, int i1, float v1, int i2, float v2, int i3, float v3) {
         this.pacienteId = id;
+        this.hospital = hospital;
         this.item1 = i1;
         this.item2 = i2;
         this.item3 = i3;
@@ -97,10 +100,19 @@ public class CompuestoRecomendadoH4 {
         this.value3 = value3;
     }
 
+    public int getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(int hospital) {
+        this.hospital = hospital;
+    }
+
     @Override
     public String toString() {
         return "CompuestoRecomendado{" +
                 "pacienteId=" + pacienteId +
+                ", hospital=" + hospital +
                 ", item1=" + item1 +
                 ", value1=" + value1 +
                 ", item2=" + item2 +

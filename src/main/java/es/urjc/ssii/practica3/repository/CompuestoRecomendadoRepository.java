@@ -1,6 +1,6 @@
-package es.urjc.ssii.practica3.repository.opcionB;
+package es.urjc.ssii.practica3.repository;
 
-import es.urjc.ssii.practica3.entity.opcionB.CompuestoRecomendado;
+import es.urjc.ssii.practica3.entity.CompuestoRecomendado;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
