@@ -1,9 +1,16 @@
-# Sistemas de Información - Convirtiendo los datos en informacion
+# Sistemas de Información - Convirtiendo los datos en información
+
+
+## 0. Demo
+
+![demo](https://user-images.githubusercontent.com/48054735/122683511-f27bd700-d1ff-11eb-96f3-4d8b6a377d4c.gif)
 
 ## 1. Objetivo
 
 El objetivo de este proyecto consiste en diseñar y poblar un almacén de datos para después poder ofrecer información útil para la
 toma de decisiones mediante OLAP, BI y algoritmos de recomendación.
+
+![dashboard_home](https://user-images.githubusercontent.com/48054735/122682458-b6de0e80-d1f9-11eb-8dbb-f2cb9ed1acee.png)
 
 ## 2. Escenario
 
@@ -70,6 +77,10 @@ Para realizar el filtrado colaborativo, cada hospital han enviado un fichero CSV
      
     - de <code>1</code> a <code>5</code> en caso de que SÍ, donde <code>1</code> es prácticamente nada de efecto y 
       <code>5</code> es mucho efecto (se sobreentiende que el efecto es siempre positivo).
+      
+Para la implementación de este apartado se ha utilizado la librería Apache Mahout.
+
+![filtrado_colaborativo](https://user-images.githubusercontent.com/48054735/122682067-b3498800-d1f7-11eb-9630-48ed7878b26e.png)
      
 ### 3.4. Reglas de asociación
 
@@ -83,11 +94,19 @@ se transforman en *true* todas aquellas celdas en los ficheros .CSV del apartado
 Las reglas de asociación obtenidas se presentarán en dos ficheros TXT en el directorio 
 <code>/entregables</code>, reglasExito.txt y reglasFallos.txt
 
+Para la implementación de este apartado se ha utilizado Weka, una librería de Machine Learning.
+
+![reglas_asociacion](https://user-images.githubusercontent.com/48054735/122682231-91043a00-d1f8-11eb-8ac0-8ece5e4551e1.png)
+
 ### 3.5. Agrupamiento
 
 Se desea agrupar a los pacientes en tres pacientes prototipo: paciente fallecido, paciente ingresados en la UCI y resto 
 de pacientes.
-   
-### 3.6. Dashboard
 
-Consiste en un front-end realizado con Google Charts en el que se muestren los datos de los apartados anteriores.
+Para la implementación de este apartado se ha utilizado el algoritmo *kMeans* de la librería Weka.
+
+![agrupamiento](https://user-images.githubusercontent.com/48054735/122682279-d3c61200-d1f8-11eb-9a08-304acc02a919.png)
+
+## 4. Decisiones de implementación
+
+Véase el documento *memoria_practica3.pdf*
